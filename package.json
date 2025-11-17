@@ -5,7 +5,10 @@
   "main": "server/server.js",
   "scripts": {
     "build": "./build-php.sh",
-    "watch": "sass --watch src/scss/styles.scss:css/styles.css"
+    "watch:scss": "sass --watch src/scss/styles.scss:css/styles.css",
+    "watch:html": "chokidar 'src/*.html' -c 'cp src/*.html .'",
+    "watch:js": "chokidar 'src/js/*.js' -c 'cp src/js/*.js js/'",
+    "watch": "npm-run-all --parallel watch:*"
   },
   "keywords": [
     "tracker",
