@@ -21,9 +21,12 @@ try {
 
                 // Parse JSON fields
                 if ($entry) {
+                    $entry['weight'] = $entry['weight'] ? json_decode($entry['weight'], true) : null;
                     $entry['lunch'] = json_decode($entry['lunch'] ?? '{"logged":false}', true);
                     $entry['dinner'] = json_decode($entry['dinner'] ?? '{"logged":false}', true);
                     $entry['drinks'] = json_decode($entry['drinks'] ?? '[]', true);
+                    $entry['gym'] = (bool)($entry['gym'] ?? false);
+                    $entry['steps'] = $entry['steps'] ? (int)$entry['steps'] : null;
                 }
 
                 jsonResponse($entry);
@@ -32,9 +35,12 @@ try {
 
                 // Parse JSON fields for all entries
                 foreach ($entries as &$entry) {
+                    $entry['weight'] = $entry['weight'] ? json_decode($entry['weight'], true) : null;
                     $entry['lunch'] = json_decode($entry['lunch'] ?? '{"logged":false}', true);
                     $entry['dinner'] = json_decode($entry['dinner'] ?? '{"logged":false}', true);
                     $entry['drinks'] = json_decode($entry['drinks'] ?? '[]', true);
+                    $entry['gym'] = (bool)($entry['gym'] ?? false);
+                    $entry['steps'] = $entry['steps'] ? (int)$entry['steps'] : null;
                 }
 
                 jsonResponse($entries);
@@ -50,19 +56,26 @@ try {
             }
 
             $date = $input['date'];
-            $weight = $input['weight'] ?? null;
+            $weight = isset($input['weight']) ? json_encode($input['weight']) : null;
             $lunch = isset($input['lunch']) ? json_encode($input['lunch']) : null;
             $dinner = isset($input['dinner']) ? json_encode($input['dinner']) : null;
             $drinks = isset($input['drinks']) ? json_encode($input['drinks']) : null;
             $notes = $input['notes'] ?? null;
+            $diary = $input['diary'] ?? null;
+            $gym = isset($input['gym']) ? (bool)$input['gym'] : null;
+            $supplements = $input['supplements'] ?? null;
+            $steps = isset($input['steps']) ? (int)$input['steps'] : null;
 
-            $entry = $db->saveEntry($userId, $date, $weight, $lunch, $dinner, $drinks, $notes);
+            $entry = $db->saveEntry($userId, $date, $weight, $lunch, $dinner, $drinks, $notes, $diary, $gym, $supplements, $steps);
 
             // Parse JSON fields
             if ($entry) {
+                $entry['weight'] = $entry['weight'] ? json_decode($entry['weight'], true) : null;
                 $entry['lunch'] = json_decode($entry['lunch'] ?? '{"logged":false}', true);
                 $entry['dinner'] = json_decode($entry['dinner'] ?? '{"logged":false}', true);
                 $entry['drinks'] = json_decode($entry['drinks'] ?? '[]', true);
+                $entry['gym'] = (bool)($entry['gym'] ?? false);
+                $entry['steps'] = $entry['steps'] ? (int)$entry['steps'] : null;
             }
 
             jsonResponse($entry);

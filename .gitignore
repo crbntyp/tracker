@@ -6,6 +6,7 @@ node_modules/
 /css/
 /*.html
 !src/*.html
+dist/
 
 # OS files
 .DS_Store
@@ -27,6 +28,24 @@ npm-debug.log*
 .env.local
 .env.php
 
+# Local development overrides (don't commit these!)
+.htaccess
+.htaccess.local
+.htaccess.production
+
 # Cache
 .cache/
 .sass-cache/
+
+# Test and development files
+test.php
+run-migration.php
+auth/test-callback.php
+
+# Extra documentation
+README.local.md
+DEPLOYMENT-CPANEL.md
+
+# Docker files (development only)
+# Dockerfile and docker-compose.yml are intentionally NOT ignored
+# but should never be uploaded to production

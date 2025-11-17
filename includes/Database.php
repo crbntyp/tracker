@@ -79,23 +79,31 @@ class Database {
                 'lunch' => json_encode(['logged' => false]),
                 'dinner' => json_encode(['logged' => false]),
                 'drinks' => json_encode([]),
-                'notes' => ''
+                'notes' => '',
+                'diary' => '',
+                'gym' => false,
+                'supplements' => '',
+                'steps' => null
             ];
         }
 
         return $entry;
     }
 
-    public function saveEntry($userId, $date, $weight, $lunch, $dinner, $drinks, $notes) {
+    public function saveEntry($userId, $date, $weight, $lunch, $dinner, $drinks, $notes, $diary = null, $gym = null, $supplements = null, $steps = null) {
         $stmt = $this->conn->prepare(
-            "INSERT INTO entries (user_id, date, weight, lunch, dinner, drinks, notes)
-             VALUES (?, ?, ?, ?, ?, ?, ?)
+            "INSERT INTO entries (user_id, date, weight, lunch, dinner, drinks, notes, diary, gym, supplements, steps)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
              ON DUPLICATE KEY UPDATE
                 weight = COALESCE(VALUES(weight), weight),
                 lunch = COALESCE(VALUES(lunch), lunch),
                 dinner = COALESCE(VALUES(dinner), dinner),
                 drinks = COALESCE(VALUES(drinks), drinks),
-                notes = COALESCE(VALUES(notes), notes)"
+                notes = COALESCE(VALUES(notes), notes),
+                diary = COALESCE(VALUES(diary), diary),
+                gym = COALESCE(VALUES(gym), gym),
+                supplements = COALESCE(VALUES(supplements), supplements),
+                steps = COALESCE(VALUES(steps), steps)"
         );
 
         $stmt->execute([
@@ -105,7 +113,11 @@ class Database {
             $lunch,
             $dinner,
             $drinks,
-            $notes
+            $notes,
+            $diary,
+            $gym,
+            $supplements,
+            $steps
         ]);
 
         return $this->getEntryByDate($userId, $date);

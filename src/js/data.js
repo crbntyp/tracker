@@ -14,7 +14,7 @@ class API {
       if (!response.ok) {
         if (response.status === 401) {
           // Redirect to login if not authenticated
-          window.location.href = '/login.html';
+          window.location.href = buildPath('/login.html');
           throw new Error('Not authenticated');
         }
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -53,10 +53,10 @@ let settingsCache = null;
 async function initStorage() {
   try {
     console.log('initStorage - Fetching entries from API...');
-    entriesCache = await API.get('/api/entries');
+    entriesCache = await API.get(buildPath('/api/entries'));
     console.log('initStorage - Entries fetched:', entriesCache.length, 'entries');
     console.log('initStorage - Entries data:', entriesCache);
-    settingsCache = await API.get('/api/settings');
+    settingsCache = await API.get(buildPath('/api/settings'));
   } catch (error) {
     console.error('Error initializing storage:', error);
     entriesCache = [];
@@ -78,7 +78,7 @@ function getSettings() {
 // Update settings
 async function updateSettings(updates) {
   try {
-    settingsCache = await API.post('/api/settings', updates);
+    settingsCache = await API.post(buildPath('/api/settings'), updates);
     return settingsCache;
   } catch (error) {
     console.error('Error updating settings:', error);
@@ -111,7 +111,7 @@ async function saveEntry(date, data) {
     console.log('Merged data:', merged);
 
     console.log('Calling API.post...');
-    const result = await API.post('/api/entries', merged);
+    const result = await API.post(buildPath('/api/entries'), merged);
     console.log('API.post result:', result);
 
     // Update cache
@@ -145,7 +145,7 @@ function getAllEntries() {
 // Delete entry
 async function deleteEntry(date) {
   try {
-    await API.delete(`/api/entries/${date}`);
+    await API.delete(buildPath(`/api/entries/${date}`));
 
     // Update cache
     if (entriesCache) {
@@ -164,7 +164,11 @@ function createEmptyEntry(date) {
     lunch: { logged: false },
     dinner: { logged: false },
     drinks: [],
-    notes: ''
+    notes: '',
+    diary: '',
+    gym: false,
+    supplements: '',
+    steps: null
   };
 }
 
@@ -250,6 +254,62 @@ async function addDrinkForDate(date, type, amount, time) {
 async function addDrink(type, amount, time) {
   const today = new Date().toISOString().split('T')[0];
   return addDrinkForDate(today, type, amount, time);
+}
+
+// Save diary for specific date
+async function saveDiaryForDate(date, content) {
+  const data = {
+    diary: content
+  };
+  return await saveEntry(date, data);
+}
+
+// Save diary (legacy - defaults to today)
+async function saveDiary(content) {
+  const today = new Date().toISOString().split('T')[0];
+  return saveDiaryForDate(today, content);
+}
+
+// Save gym for specific date
+async function saveGymForDate(date, attended) {
+  const data = {
+    gym: attended
+  };
+  return await saveEntry(date, data);
+}
+
+// Save gym (legacy - defaults to today)
+async function saveGym(attended) {
+  const today = new Date().toISOString().split('T')[0];
+  return saveGymForDate(today, attended);
+}
+
+// Save supplements for specific date
+async function saveSupplementsForDate(date, supplements) {
+  const data = {
+    supplements: supplements
+  };
+  return await saveEntry(date, data);
+}
+
+// Save supplements (legacy - defaults to today)
+async function saveSupplements(supplements) {
+  const today = new Date().toISOString().split('T')[0];
+  return saveSupplementsForDate(today, supplements);
+}
+
+// Save steps for specific date
+async function saveStepsForDate(date, steps) {
+  const data = {
+    steps: steps
+  };
+  return await saveEntry(date, data);
+}
+
+// Save steps (legacy - defaults to today)
+async function saveSteps(steps) {
+  const today = new Date().toISOString().split('T')[0];
+  return saveStepsForDate(today, steps);
 }
 
 // Export all data

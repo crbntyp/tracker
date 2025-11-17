@@ -92,6 +92,73 @@
     </div>
   </div>
 
+  <!-- Gym Modal -->
+  <div class="modal" id="gymModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Gym Attendance</h2>
+      </div>
+      <form id="gymForm">
+        <div class="form-group">
+          <label>Did you go to the gym?</label>
+          <div class="radio-group">
+            <label class="radio-label">
+              <input type="radio" name="gym" id="gymYes" value="true" required>
+              <span>Yes</span>
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="gym" id="gymNo" value="false" required>
+              <span>No</span>
+            </label>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="submit" class="btn-primary">Save</button>
+          <button type="button" class="btn-secondary" data-close="gymModal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Supplements Modal -->
+  <div class="modal" id="supplementsModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Supplements</h2>
+      </div>
+      <form id="supplementsForm">
+        <div class="form-group">
+          <label for="supplementsInput">What supplements did you take?</label>
+          <textarea id="supplementsInput" rows="4" placeholder="e.g., Vitamin D, Protein, Creatine..."></textarea>
+        </div>
+        <div class="modal-actions">
+          <button type="submit" class="btn-primary">Save</button>
+          <button type="button" class="btn-secondary" data-close="supplementsModal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Steps Modal -->
+  <div class="modal" id="stepsModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Daily Steps</h2>
+      </div>
+      <form id="stepsForm">
+        <div class="form-group">
+          <label for="stepsInput">How many steps?</label>
+          <input type="number" id="stepsInput" placeholder="e.g., 10000" min="0" step="1">
+        </div>
+        <div class="modal-actions">
+          <button type="submit" class="btn-primary">Save</button>
+          <button type="button" class="btn-secondary" data-close="stepsModal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
   <script src="js/data.js"></script>
   <script src="js/utils.js"></script>
   <script src="js/ui.js"></script>

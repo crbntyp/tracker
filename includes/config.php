@@ -38,7 +38,7 @@ define('GOOGLE_CLIENT_SECRET', getenv('GOOGLE_CLIENT_SECRET') ?: '');
 define('GOOGLE_REDIRECT_URI', getenv('GOOGLE_REDIRECT_URI') ?: 'https://www.carbontype.co/tracker/auth/google/callback');
 
 // App configuration
-define('BASE_URL', getenv('BASE_URL') ?: '/tracker');
+define('BASE_URL', getenv('BASE_URL') !== false ? getenv('BASE_URL') : '/tracker');
 define('APP_ENV', getenv('APP_ENV') ?: 'production');
 
 // Session configuration

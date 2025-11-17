@@ -82,7 +82,7 @@ async function updateUserName() {
   const userNameEl = document.getElementById('userName');
   if (userNameEl) {
     try {
-      const response = await fetch('/auth/user', { credentials: 'include' });
+      const response = await fetch(buildPath('/auth/user'), { credentials: 'include' });
       if (response.ok) {
         const user = await response.json();
         userNameEl.textContent = user.name || 'User';
@@ -130,6 +130,11 @@ function setupWeightForm() {
         // Refresh calendar if on calendar page
         if (typeof renderWeekView === 'function' && currentWeekStart) {
           renderWeekView(currentWeekStart);
+        }
+
+        // Refresh day details to show updated weight
+        if (typeof showDayDetails === 'function' && selectedDate) {
+          showDayDetails(selectedDate);
         }
 
         showNotification('Weight saved!');
@@ -182,6 +187,99 @@ function showNotification(message) {
   }, 2000);
 }
 
+// Setup gym form
+function setupGymForm() {
+  const form = document.getElementById('gymForm');
+  if (!form) return;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const modal = document.getElementById('gymModal');
+    const date = modal.dataset.date;
+    const attended = document.querySelector('input[name="gym"]:checked').value === 'true';
+
+    if (date) {
+      try {
+        await saveGymForDate(date, attended);
+        closeModal('gymModal');
+
+        // Refresh day details
+        if (typeof showDayDetails === 'function') {
+          showDayDetails(date);
+        }
+
+        showNotification('Gym attendance saved!');
+      } catch (error) {
+        console.error('Error saving gym:', error);
+        showNotification('Error saving gym attendance!');
+      }
+    }
+  });
+}
+
+// Setup supplements form
+function setupSupplementsForm() {
+  const form = document.getElementById('supplementsForm');
+  if (!form) return;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const modal = document.getElementById('supplementsModal');
+    const date = modal.dataset.date;
+    const supplements = document.getElementById('supplementsInput').value;
+
+    if (date) {
+      try {
+        await saveSupplementsForDate(date, supplements);
+        closeModal('supplementsModal');
+
+        // Refresh day details
+        if (typeof showDayDetails === 'function') {
+          showDayDetails(date);
+        }
+
+        showNotification('Supplements saved!');
+      } catch (error) {
+        console.error('Error saving supplements:', error);
+        showNotification('Error saving supplements!');
+      }
+    }
+  });
+}
+
+// Setup steps form
+function setupStepsForm() {
+  const form = document.getElementById('stepsForm');
+  if (!form) return;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const modal = document.getElementById('stepsModal');
+    const date = modal.dataset.date;
+    const steps = parseInt(document.getElementById('stepsInput').value);
+
+    if (date && !isNaN(steps)) {
+      try {
+        await saveStepsForDate(date, steps);
+        closeModal('stepsModal');
+
+        // Refresh day details
+        if (typeof showDayDetails === 'function') {
+          showDayDetails(date);
+        }
+
+        showNotification('Steps saved!');
+      } catch (error) {
+        console.error('Error saving steps:', error);
+        showNotification('Error saving steps!');
+      }
+    }
+  });
+}
+
 // Initialize UI
 async function initUI() {
   await updateUserName();
@@ -189,6 +287,9 @@ async function initUI() {
   updateActionButtons();
   setupActionButtons();
   setupWeightForm();
+  setupGymForm();
+  setupSupplementsForm();
+  setupStepsForm();
   setupCloseButtons();
   setupModalClickOutside();
 }

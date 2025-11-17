@@ -12,7 +12,7 @@ class Navigation {
 
   async loadUser() {
     try {
-      const response = await fetch('/auth/user');
+      const response = await fetch(buildPath('/auth/user'));
       if (response.ok) {
         this.user = await response.json();
       }
@@ -30,23 +30,23 @@ class Navigation {
     nav.innerHTML = `
       <div class="nav-container">
         <div class="nav-links">
-          <a href="/" class="nav-link ${currentPage === '/' ? 'active' : ''}">
-            <i class="lar la-calendar-check nav-icon"></i>
+          <a href="${buildPath('/')}" class="nav-link ${currentPage.includes('calendar') || currentPage === buildPath('/') ? 'active' : ''}">
+            <i class="las la-calendar nav-icon"></i>
             <span class="nav-text">Calendar</span>
           </a>
-          <a href="/charts.html" class="nav-link ${currentPage === '/charts.html' ? 'active' : ''}">
-            <i class="las la-chart-pie nav-icon"></i>
+          <a href="${buildPath('/charts.html')}" class="nav-link ${currentPage.includes('charts') ? 'active' : ''}">
+            <i class="las la-chart-line nav-icon"></i>
             <span class="nav-text">Charts</span>
           </a>
         </div>
         <div class="nav-logo">
-          <a href="/"><img src="/logo.png" alt="Logo"></a>
+          <a href="${buildPath('/')}"><img src="${buildPath('/logo.png')}" alt="Logo"></a>
         </div>
         <div class="nav-user">
           ${this.user ? `
             <div class="user-menu">
               <img src="${this.user.picture || ''}" alt="${this.user.name}" class="user-avatar">
-              <a href="/auth/logout" class="logout-btn"><i class="las la-sign-out-alt"></i></a>
+              <a href="${buildPath('/auth/logout')}" class="logout-btn"><i class="las la-sign-out-alt"></i></a>
             </div>
           ` : ''}
         </div>

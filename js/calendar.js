@@ -85,31 +85,77 @@ function showDayDetails(dateStr) {
       <h3>${dateFormatted}</h3>
       <div class="day-quick-actions">
         ${entry.weight ?
-          `<button class="btn btn-sm" onclick="editWeight('${dateStr}', ${entry.weight.value}, '${entry.weight.unit}', '${entry.weight.time}')"><i class="las la-edit"></i> Edit Weight</button>` :
-          `<button class="btn btn-sm" onclick="openModalForDate('weightModal', '${dateStr}')"><i class="las la-plus"></i> Add Weight</button>`
+          `<button class="btn btn-sm" onclick="editWeight('${dateStr}', ${entry.weight.value}, '${entry.weight.unit}', '${entry.weight.time}')"><i class="las la-edit"></i> Weight</button>` :
+          `<button class="btn btn-sm" onclick="openModalForDate('weightModal', '${dateStr}')"><i class="las la-plus"></i> Weight</button>`
         }
+        <button class="btn btn-sm" onclick="openModalForDateGym('${dateStr}', ${entry.gym})"><i class="las ${entry.gym ? 'la-edit' : 'la-plus'}"></i> Gym</button>
+        <button class="btn btn-sm" onclick="openModalForDateSupplements('${dateStr}')"><i class="las ${entry.supplements ? 'la-edit' : 'la-plus'}"></i> Supplements</button>
+        <button class="btn btn-sm" onclick="openModalForDateSteps('${dateStr}')"><i class="las ${entry.steps ? 'la-edit' : 'la-plus'}"></i> Steps</button>
+      </div>
+    </div>
+
+    <div class="day-details-grid">
+      <div class="day-details-left">
+        <!-- Weight -->
+        ${entry.weight ? `
+          <div class="detail-item">
+            <strong>Weight:</strong>
+            <span>${entry.weight.value} ${entry.weight.unit} at ${entry.weight.time}</span>
+          </div>
+        ` : `
+          <div class="detail-item empty">
+            <strong>Weight:</strong>
+            <span>Not logged</span>
+          </div>
+        `}
+
+        <!-- Gym -->
+        <div class="detail-item">
+          <strong>Gym:</strong>
+          <span>${entry.gym ? '✓ Yes' : '✗ No'}</span>
+        </div>
+
+        <!-- Supplements -->
+        <div class="detail-item">
+          <strong>Supplements:</strong>
+          <span>${entry.supplements || 'None'}</span>
+        </div>
+
+        <!-- Steps -->
+        <div class="detail-item">
+          <strong>Steps:</strong>
+          <span class="${entry.steps ? 'steps-value' : ''}">${entry.steps ? entry.steps.toLocaleString() : 'Not logged'}</span>
+        </div>
+      </div>
+
+      <div class="day-details-right">
+        <!-- Diary -->
+        <div class="diary-section">
+          <strong>Diary</strong>
+          <textarea id="diary-${dateStr}" class="diary-textarea" placeholder="Write your diary entry...">${entry.diary || ''}</textarea>
+          <button class="btn btn-sm" onclick="saveDiaryEntry('${dateStr}')"><i class="las la-save"></i> Save Diary</button>
+        </div>
       </div>
     </div>
   `;
 
-  // Weight
-  if (entry.weight) {
-    html += `
-      <div class="detail-item">
-        <strong>Weight:</strong>
-        <span>${entry.weight.value} ${entry.weight.unit} at ${entry.weight.time}</span>
-      </div>
-    `;
-  } else {
-    html += `
-      <div class="detail-item empty">
-        <strong>Weight:</strong>
-        <span>Not logged</span>
-      </div>
-    `;
-  }
-
   detailsEl.innerHTML = html;
+}
+
+// Save diary entry
+async function saveDiaryEntry(date) {
+  const textarea = document.getElementById(`diary-${date}`);
+  if (!textarea) return;
+
+  const content = textarea.value;
+
+  try {
+    await saveDiaryForDate(date, content);
+    showNotification('Diary saved!');
+  } catch (error) {
+    console.error('Error saving diary:', error);
+    showNotification('Error saving diary!');
+  }
 }
 
 // Open modal with pre-filled date
@@ -150,6 +196,55 @@ function editWeight(date, value, unit, time) {
   document.getElementById('weightTime').value = time;
 
   openModal('weightModal');
+}
+
+// Open gym modal with pre-filled date
+function openModalForDateGym(date, currentValue) {
+  const modal = document.getElementById('gymModal');
+  if (!modal) return;
+
+  // Store date in modal
+  modal.dataset.date = date;
+
+  // Set radio buttons
+  document.getElementById('gymYes').checked = currentValue;
+  document.getElementById('gymNo').checked = !currentValue;
+
+  openModal('gymModal');
+}
+
+// Open supplements modal with pre-filled date
+function openModalForDateSupplements(date) {
+  const modal = document.getElementById('supplementsModal');
+  if (!modal) return;
+
+  // Get current entry data
+  const entry = getEntry(date);
+
+  // Store date in modal
+  modal.dataset.date = date;
+
+  // Pre-fill supplements
+  document.getElementById('supplementsInput').value = entry.supplements || '';
+
+  openModal('supplementsModal');
+}
+
+// Open steps modal with pre-filled date
+function openModalForDateSteps(date) {
+  const modal = document.getElementById('stepsModal');
+  if (!modal) return;
+
+  // Get current entry data
+  const entry = getEntry(date);
+
+  // Store date in modal
+  modal.dataset.date = date;
+
+  // Pre-fill steps
+  document.getElementById('stepsInput').value = entry.steps || '';
+
+  openModal('stepsModal');
 }
 
 // Navigate to previous week

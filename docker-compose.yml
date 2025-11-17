@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:80"
+    volumes:
+      # Mount source files for live editing
+      - ./:/var/www/html/
+      # Don't mount node_modules
+      - /var/www/html/node_modules
+    environment:
+      - APACHE_DOCUMENT_ROOT=/var/www/html
+    restart: unless-stopped
