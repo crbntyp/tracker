@@ -1,10 +1,9 @@
 # Dependencies
 node_modules/
 
-# Build outputs (compiled to root - don't commit)
+# Build outputs (compiled to root)
 *.css.map
 /css/
-/js/
 /*.html
 !src/*.html
 
