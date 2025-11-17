@@ -4,6 +4,7 @@ node_modules/
 # Build outputs
 *.css.map
 dist/
+tracker-php-deploy.zip
 
 # OS files
 .DS_Store
@@ -23,6 +24,8 @@ npm-debug.log*
 # Environment
 .env
 .env.local
+.env.php
+php/.env.php
 
 # Cache
 .cache/
