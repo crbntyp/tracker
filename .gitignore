@@ -1,11 +1,12 @@
 # Dependencies
 node_modules/
 
-# Build outputs
+# Build outputs (compiled to root - don't commit)
 *.css.map
-dist/
-deploy/
-tracker-php-deploy.zip
+/css/
+/js/
+/*.html
+!src/*.html
 
 # OS files
 .DS_Store
@@ -26,7 +27,6 @@ npm-debug.log*
 .env
 .env.local
 .env.php
-php/.env.php
 
 # Cache
 .cache/

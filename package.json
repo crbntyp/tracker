@@ -4,21 +4,8 @@
   "description": "Weight and meal tracker with Google authentication",
   "main": "server/server.js",
   "scripts": {
-    "postinstall": "npm run build",
-    "start": "node server/server.js",
-    "init-db": "node server/init-db.js",
-    "build:scss": "sass src/scss/styles.scss dist/css/styles.css",
-    "build:html": "cpx 'src/**/*.html' dist",
-    "build:js": "cpx 'src/js/**/*.js' dist/js",
-    "build:assets": "cpx 'logo.png' dist",
-    "build": "npm-run-all build:scss build:html build:js build:assets",
-    "watch:scss": "sass --watch src/scss/styles.scss:dist/css/styles.css",
-    "watch:html": "chokidar 'src/**/*.html' -c 'npm run build:html'",
-    "watch:js": "chokidar 'src/js/**/*.js' -c 'npm run build:js'",
-    "watch:assets": "chokidar 'logo.png' -c 'npm run build:assets'",
-    "server": "nodemon server/server.js",
-    "browser-sync": "browser-sync start --proxy 'localhost:3000' --files 'dist/**/*' --no-open --host 192.168.0.165",
-    "dev": "npm run build && npm-run-all --parallel watch:* server browser-sync"
+    "build": "./build-php.sh",
+    "watch": "sass --watch src/scss/styles.scss:css/styles.css"
   },
   "keywords": [
     "tracker",
