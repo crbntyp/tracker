@@ -35,7 +35,7 @@ define('DB_PASSWORD', getenv('DB_PASSWORD') ?: '');
 // Google OAuth configuration
 define('GOOGLE_CLIENT_ID', getenv('GOOGLE_CLIENT_ID') ?: '');
 define('GOOGLE_CLIENT_SECRET', getenv('GOOGLE_CLIENT_SECRET') ?: '');
-define('GOOGLE_REDIRECT_URI', getenv('GOOGLE_REDIRECT_URI') ?: 'https://carbontype.co/tracker/auth/callback.php');
+define('GOOGLE_REDIRECT_URI', getenv('GOOGLE_REDIRECT_URI') ?: 'https://www.carbontype.co/tracker/auth/google/callback');
 
 // App configuration
 define('BASE_URL', getenv('BASE_URL') ?: '/tracker');

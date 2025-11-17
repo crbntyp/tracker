@@ -4,17 +4,21 @@
 RewriteEngine On
 
 # Set base directory
-RewriteBase /tracker
+RewriteBase /tracker/
+
+# Debug: Log rewrite activity (comment out after testing)
+# RewriteLog "/tmp/rewrite.log"
+# RewriteLogLevel 3
 
 # Serve static files directly (dist folder)
 RewriteCond %{REQUEST_FILENAME} -f
 RewriteRule ^dist/ - [L]
 
 # Route auth endpoints
-RewriteRule ^auth/google$ auth/google.php [L]
-RewriteRule ^auth/google/callback$ auth/callback.php [L]
-RewriteRule ^auth/logout$ auth/logout.php [L]
-RewriteRule ^auth/user$ auth/user.php [L]
+RewriteRule ^auth/google/?$ auth/google.php [L]
+RewriteRule ^auth/google/callback/?$ auth/callback.php [L,QSA]
+RewriteRule ^auth/logout/?$ auth/logout.php [L]
+RewriteRule ^auth/user/?$ auth/user.php [L]
 
 # Route API endpoints
 RewriteRule ^api/entries/?$ api/entries.php [L,QSA]

@@ -20,11 +20,11 @@ if (file_exists(__DIR__ . '/../../.env.php')) {
 define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
 define('DB_NAME', getenv('DB_NAME') ?: 'tracker');
 define('DB_USER', getenv('DB_USER') ?: 'tracker_user');
-define('DB_PASSWORD', getenv('DB_PASSWORD') ?: '');
+define('DB_PASSWORD', getenv('DB_PASSWORD') ?: 'Cantona19791');
 
 // Google OAuth configuration
-define('GOOGLE_CLIENT_ID', getenv('GOOGLE_CLIENT_ID') ?: '');
-define('GOOGLE_CLIENT_SECRET', getenv('GOOGLE_CLIENT_SECRET') ?: '');
+define('GOOGLE_CLIENT_ID', getenv('GOOGLE_CLIENT_ID') ?: '129846551328-rtppq1j2plcv0s86pq58dvclcf7cl4gb.apps.googleusercontent.com');
+define('GOOGLE_CLIENT_SECRET', getenv('GOOGLE_CLIENT_SECRET') ?: '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');
 define('GOOGLE_REDIRECT_URI', getenv('GOOGLE_REDIRECT_URI') ?: 'https://carbontype.co/tracker/auth/callback.php');
 
 // App configuration
