@@ -1,7 +1,7 @@
 {
-  "name": "Weight Tracker",
-  "short_name": "Tracker",
-  "description": "Modern weight and food intake tracker with dark theme",
+  "name": "Resilient",
+  "short_name": "Resilient",
+  "description": "Modern fitness tracking app with dark theme",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#000000",

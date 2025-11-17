@@ -1,5 +1,5 @@
 /**
- * Weight Tracker - Background Image Rotator
+ * Resilient - Background Image Rotator
  * Fetches fitness/gym/muscle car images from Pexels and rotates them with crossfade effect
  */
 

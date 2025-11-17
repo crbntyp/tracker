@@ -2,7 +2,7 @@
 
 // Initialize app when DOM is ready
 document.addEventListener('DOMContentLoaded', async function() {
-  console.log('Weight Tracker App initialized');
+  console.log('Resilient App initialized');
 
   // Wait for storage/API to initialize
   if (typeof initStorage === 'function') {
