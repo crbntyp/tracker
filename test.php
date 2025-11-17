@@ -1,8 +1,17 @@
 <?php
 // Quick debug test - DELETE AFTER TESTING
 
+require_once __DIR__ . '/includes/config.php';
+
 echo "<h1>Debug Info</h1>";
 echo "<p>If you see this, PHP is working!</p>";
+
+echo "<h2>Google OAuth Config:</h2>";
+echo "<pre>";
+echo "GOOGLE_CLIENT_ID: " . (GOOGLE_CLIENT_ID ? substr(GOOGLE_CLIENT_ID, 0, 20) . '...' : 'NOT SET') . "\n";
+echo "GOOGLE_CLIENT_SECRET: " . (GOOGLE_CLIENT_SECRET ? 'SET (hidden)' : 'NOT SET') . "\n";
+echo "GOOGLE_REDIRECT_URI: " . GOOGLE_REDIRECT_URI . "\n";
+echo "</pre>";
 
 echo "<h2>Files in this directory:</h2>";
 echo "<pre>";
