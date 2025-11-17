@@ -7,24 +7,33 @@ echo "Building PHP version for cPanel deployment..."
 echo "1. Building frontend..."
 npm run build
 
-# Copy dist to php folder
-echo "2. Copying dist folder to php..."
-rm -rf php/dist
-cp -r dist php/dist
+# Create clean deployment folder
+echo "2. Creating deployment folder..."
+rm -rf deploy
+mkdir -p deploy
+
+# Copy PHP backend files
+echo "3. Copying PHP backend..."
+cp -r php/api deploy/
+cp -r php/auth deploy/
+cp -r php/includes deploy/
+cp -r php/database deploy/
+cp php/.htaccess deploy/
+cp php/index.php deploy/
+cp php/.env.example.php deploy/
+cp php/README-PHP.md deploy/
+
+# Copy frontend files (flatten dist folder)
+echo "4. Copying frontend files (flattening dist/)..."
+cp -r dist/* deploy/
 
 # Create deployment package
-echo "3. Creating deployment package..."
-cd php
+echo "5. Creating deployment package..."
+cd deploy
 zip -r ../tracker-php-deploy.zip \
+    * \
     .htaccess \
-    index.php \
-    api/ \
-    auth/ \
-    includes/ \
-    database/ \
-    dist/ \
     .env.example.php \
-    README-PHP.md \
     -x "*.DS_Store" "*__MACOSX*"
 
 cd ..

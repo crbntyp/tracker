@@ -17,16 +17,10 @@ $path = rtrim($path, '/'); // Remove trailing slash
 // Root path - redirect based on auth status
 if ($path === '' || $path === '/') {
     if (isAuthenticated()) {
-        header('Location: ' . $basePath . '/dist/calendar.html');
+        header('Location: ' . $basePath . '/calendar.html');
     } else {
-        header('Location: ' . $basePath . '/dist/login.html');
+        header('Location: ' . $basePath . '/login.html');
     }
-    exit;
-}
-
-// Handle login page
-if ($path === '/login.html' || $path === '/dist/login.html') {
-    readfile(__DIR__ . '/dist/login.html');
     exit;
 }
 

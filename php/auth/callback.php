@@ -7,7 +7,7 @@ require_once __DIR__ . '/../includes/auth.php';
 
 // Check for authorization code
 if (!isset($_GET['code'])) {
-    header('Location: ' . BASE_URL . '/dist/login.html?error=no_code');
+    header('Location: ' . BASE_URL . '/login.html?error=no_code');
     exit;
 }
 
@@ -35,7 +35,7 @@ curl_close($ch);
 
 if ($httpCode !== 200) {
     error_log("Token exchange failed: " . $response);
-    header('Location: ' . BASE_URL . '/dist/login.html?error=token_failed');
+    header('Location: ' . BASE_URL . '/login.html?error=token_failed');
     exit;
 }
 
@@ -43,7 +43,7 @@ $tokenResult = json_decode($response, true);
 $accessToken = $tokenResult['access_token'] ?? null;
 
 if (!$accessToken) {
-    header('Location: ' . BASE_URL . '/dist/login.html?error=no_token');
+    header('Location: ' . BASE_URL . '/login.html?error=no_token');
     exit;
 }
 
@@ -59,14 +59,14 @@ curl_close($ch);
 
 if ($httpCode !== 200) {
     error_log("User info fetch failed: " . $userInfoResponse);
-    header('Location: ' . BASE_URL . '/dist/login.html?error=userinfo_failed');
+    header('Location: ' . BASE_URL . '/login.html?error=userinfo_failed');
     exit;
 }
 
 $userInfo = json_decode($userInfoResponse, true);
 
 if (!isset($userInfo['id']) || !isset($userInfo['email'])) {
-    header('Location: ' . BASE_URL . '/dist/login.html?error=invalid_user');
+    header('Location: ' . BASE_URL . '/login.html?error=invalid_user');
     exit;
 }
 
@@ -90,11 +90,11 @@ try {
     loginUser($user);
 
     // Redirect to app
-    header('Location: ' . BASE_URL . '/dist/calendar.html');
+    header('Location: ' . BASE_URL . '/calendar.html');
     exit;
 
 } catch (Exception $e) {
     error_log("Database error during OAuth: " . $e->getMessage());
-    header('Location: ' . BASE_URL . '/dist/login.html?error=db_error');
+    header('Location: ' . BASE_URL . '/login.html?error=db_error');
     exit;
 }

@@ -10,9 +10,9 @@ RewriteBase /tracker/
 # RewriteLog "/tmp/rewrite.log"
 # RewriteLogLevel 3
 
-# Serve static files directly (dist folder)
+# Serve static files directly
 RewriteCond %{REQUEST_FILENAME} -f
-RewriteRule ^dist/ - [L]
+RewriteRule \.(html|css|js|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$ - [L]
 
 # Route auth endpoints
 RewriteRule ^auth/google/?$ auth/google.php [L]
@@ -25,8 +25,7 @@ RewriteRule ^api/entries/?$ api/entries.php [L,QSA]
 RewriteRule ^api/entries/([^/]+)$ api/entries.php?date=$1 [L,QSA]
 RewriteRule ^api/settings$ api/settings.php [L,QSA]
 
-# Serve HTML files from dist
-RewriteRule ^(calendar|charts|login|dashboard|migrate|test-data|test-save)\.html$ dist/$1.html [L]
+# HTML files are at root - no rewrite needed, served by static file rule above
 
 # Default route - send to index.php
 RewriteCond %{REQUEST_FILENAME} !-f

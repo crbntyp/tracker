@@ -6,5 +6,5 @@ require_once __DIR__ . '/../includes/auth.php';
 
 logoutUser();
 
-header('Location: ' . BASE_URL . '/dist/login.html');
+header('Location: ' . BASE_URL . '/login.html');
 exit;
