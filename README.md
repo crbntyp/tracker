@@ -1,6 +1,21 @@
-# Resolve
+<div align="center">
+  <img src="logo.png" alt="Resolve Logo" width="200">
 
-A dark-themed fitness tracking application with Google OAuth authentication. Track your weight, gym attendance, supplements, steps, and daily diary entries.
+  # Resolve
+
+  A dark-themed fitness tracking application with Google OAuth authentication. Track your weight, gym attendance, supplements, steps, and daily diary entries.
+</div>
+
+## Screenshots
+
+<div align="center">
+  <img src="gitimgs/Screenshot 2025-11-17 at 21.30.24.png" alt="Calendar View" width="45%">
+  <img src="gitimgs/Screenshot 2025-11-17 at 21.30.36.png" alt="Charts View" width="45%">
+</div>
+
+<div align="center">
+  <img src="gitimgs/Screenshot 2025-11-17 at 21.30.45.png" alt="Details View" width="45%">
+</div>
 
 ## Features
 
