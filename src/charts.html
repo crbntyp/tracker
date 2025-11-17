@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#000000">
+  <title>Charts - Weight Tracker</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Muli:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Line Awesome Icons -->
+  <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
+
+  <link rel="stylesheet" href="css/styles.css">
+  <!-- Chart.js from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <nav id="main-nav"></nav>
+
+  <div class="container">
+    <div class="page-header">
+      <h1>Your Progress</h1>
+      <p class="subtitle">Track your weight trends and logging consistency</p>
+    </div>
+
+    <div class="content-area">
+      <!-- Period Selection -->
+      <div class="period-selector">
+        <button class="period-btn" data-period="7">Last 7 Days</button>
+        <button class="period-btn" data-period="30">Last 30 Days</button>
+        <button class="period-btn" data-period="90">Last 90 Days</button>
+        <button class="period-btn active" data-period="365">All Time</button>
+      </div>
+
+      <!-- Weight Chart -->
+      <div class="chart-section">
+        <h2>Weight Trend with Moving Average</h2>
+        <div class="chart-container">
+          <canvas id="weightChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Weight Statistics -->
+      <div class="stats-section">
+        <h2>Weight Statistics</h2>
+        <div id="weightStats" class="stats-grid-charts">
+          <!-- Stats will be populated by charts.js -->
+        </div>
+      </div>
+
+      <!-- Weight Change Rate Chart -->
+      <div class="chart-section">
+        <h2>Weight Change Rate</h2>
+        <div class="chart-container">
+          <canvas id="changeRateChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Weekly Comparison Chart -->
+      <div class="chart-section">
+        <h2>Weekly Average Comparison</h2>
+        <div class="chart-container">
+          <canvas id="weeklyComparisonChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/bg-rotator.js"></script>
+</body>
+</html>

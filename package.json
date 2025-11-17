@@ -1,0 +1,48 @@
+{
+  "name": "weight-tracker",
+  "version": "1.0.0",
+  "description": "Weight and meal tracker with Google authentication",
+  "main": "server/server.js",
+  "scripts": {
+    "postinstall": "npm run build",
+    "start": "node server/server.js",
+    "init-db": "node server/init-db.js",
+    "build:scss": "sass src/scss/styles.scss dist/css/styles.css",
+    "build:html": "cpx 'src/**/*.html' dist",
+    "build:js": "cpx 'src/js/**/*.js' dist/js",
+    "build:assets": "cpx 'logo.png' dist",
+    "build": "npm-run-all build:scss build:html build:js build:assets",
+    "watch:scss": "sass --watch src/scss/styles.scss:dist/css/styles.css",
+    "watch:html": "chokidar 'src/**/*.html' -c 'npm run build:html'",
+    "watch:js": "chokidar 'src/js/**/*.js' -c 'npm run build:js'",
+    "watch:assets": "chokidar 'logo.png' -c 'npm run build:assets'",
+    "server": "nodemon server/server.js",
+    "browser-sync": "browser-sync start --proxy 'localhost:3000' --files 'dist/**/*' --no-open --host 192.168.0.165",
+    "dev": "npm run build && npm-run-all --parallel watch:* server browser-sync"
+  },
+  "keywords": [
+    "tracker",
+    "health",
+    "weight"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "cpx2": "^8.0.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "helmet": "^7.1.0",
+    "npm-run-all": "^4.1.5",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
+    "pg": "^8.11.3",
+    "sass": "^1.94.0"
+  },
+  "devDependencies": {
+    "browser-sync": "^3.0.4",
+    "chokidar-cli": "^3.0.0",
+    "nodemon": "^3.0.2"
+  }
+}

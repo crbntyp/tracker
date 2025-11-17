@@ -1,0 +1,313 @@
+// Modern Dark Components
+
+// Greeting Section
+.greeting {
+  text-align: center;
+  margin-bottom: $spacing-xl;
+  padding: $spacing-lg 0;
+
+  h1 {
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-bold;
+    margin-bottom: $spacing-sm;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: $text-primary;
+
+    span {
+      @include text-gradient;
+    }
+  }
+
+  p {
+    font-size: $font-size-base;
+    color: $text-secondary;
+    font-weight: $font-weight-normal;
+    margin-bottom: $spacing-xs;
+  }
+
+  .date-display {
+    font-size: $font-size-xs;
+    color: $text-muted;
+    font-weight: $font-weight-normal;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+}
+
+// Actions Grid
+.actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-md;
+
+  @media (min-width: $tablet) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: $spacing-lg;
+  }
+}
+
+// Button Styles - Minimal & Clean
+.btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-sm;
+  width: 100%;
+  padding: $spacing-md $spacing-lg;
+  font-size: $font-size-base;
+  font-weight: $font-weight-medium;
+  font-family: $font-primary;
+  text-align: center;
+  border: none;
+  border-radius: $radius-md;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all $transition-base;
+  color: $text-primary;
+
+  // Glass effect background
+  @include glass-card;
+
+ 
+
+  &:hover {
+    box-shadow: $shadow-lg, $shadow-glow;
+
+    &::before {
+      opacity: 1;
+    }
+  }
+
+  &:active {
+  }
+
+  .text {
+    flex: 1;
+    position: relative;
+    z-index: 1;
+    text-align: center;
+  }
+
+  &.btn-primary {
+    background: $gradient-primary;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: $shadow-md, $shadow-glow-purple;
+
+    &:hover {
+      box-shadow: $shadow-xl, $shadow-glow-purple;
+    }
+  }
+
+  &.logged {
+    &::after {
+      content: '✓';
+      position: absolute;
+      top: $spacing-sm;
+      right: $spacing-sm;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: $text-primary;
+      font-size: 16px;
+      font-weight: $font-weight-bold;
+      border-radius: $radius-full;
+      box-shadow: 0 4px 12px rgba(255, 69, 0, 0.4);
+      z-index: 2;
+    }
+  }
+}
+
+// Forms - Modern Dark
+.form-group {
+  margin-bottom: $spacing-lg;
+
+  label {
+    display: block;
+    margin-bottom: $spacing-sm;
+    font-weight: $font-weight-semibold;
+    font-size: $font-size-sm;
+    color: $text-secondary;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    padding: $spacing-md $spacing-lg;
+    font-size: $font-size-base;
+    font-family: $font-primary;
+    color: $text-primary;
+    background: rgba($dark-bg-elevated, 0.6);
+    border: 1px solid $border-primary;
+    border-radius: $radius-md;
+    transition: all $transition-base;
+
+    &::placeholder {
+      color: $text-muted;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $accent-primary;
+      box-shadow: 0 0 0 3px rgba($accent-primary, 0.1),
+                  $shadow-glow;
+      background: rgba($dark-bg-elevated, 0.8);
+    }
+
+    &:hover {
+      border-color: rgba($accent-primary, 0.5);
+    }
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+
+  .input-group {
+    display: flex;
+    gap: $spacing-sm;
+
+    input {
+      flex: 1;
+    }
+
+    select {
+      width: auto;
+      min-width: 100px;
+    }
+  }
+}
+
+// Modal - Modern Overlay
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(10, 10, 10, 0.85);
+  backdrop-filter: $blur-md;
+  z-index: 1000;
+  padding: $spacing-lg;
+  overflow-y: auto;
+
+  &.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn $transition-base;
+  }
+
+  .modal-content {
+    @include glass-card;
+    padding: $spacing-xl;
+    border-radius: $radius-lg;
+    max-width: 500px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    animation: slideUp $transition-spring;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: $gradient-accent;
+    }
+  }
+
+  .modal-header {
+    margin-bottom: $spacing-xl;
+
+    h2 {
+      font-size: $font-size-xl;
+      font-weight: $font-weight-bold;
+      @include text-gradient;
+    }
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: $spacing-md;
+    margin-top: $spacing-xl;
+
+    button {
+      flex: 1;
+      padding: $spacing-md $spacing-lg;
+      font-size: $font-size-base;
+      font-weight: $font-weight-semibold;
+      font-family: $font-primary;
+      border: none;
+      border-radius: $radius-md;
+      cursor: pointer;
+      transition: all $transition-base;
+
+      &.btn-primary {
+        background: $gradient-primary;
+        color: $text-primary;
+        box-shadow: $shadow-md;
+
+        &:hover {
+          box-shadow: $shadow-lg;
+        }
+
+        &:active {
+        }
+      }
+
+      &.btn-secondary {
+        background: rgba($dark-bg-elevated, 0.6);
+        color: $text-secondary;
+        border: 1px solid $border-primary;
+
+        &:hover {
+          background: rgba($dark-bg-elevated, 0.8);
+          border-color: $accent-primary;
+          color: $text-primary;
+        }
+      }
+    }
+  }
+}
+
+// Animations
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}

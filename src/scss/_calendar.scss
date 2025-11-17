@@ -1,0 +1,613 @@
+// Modern Dark Calendar Styles
+
+.calendar-week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: $spacing-xs;
+  margin-bottom: $spacing-xl;
+
+  @media (max-width: $tablet) {
+    gap: $spacing-xs;
+    overflow-x: auto;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(120px, 1fr);
+    padding-bottom: $spacing-sm;
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: $dark-bg-secondary;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: $accent-primary;
+      border-radius: $radius-full;
+    }
+  }
+
+  .calendar-day {
+    @include glass-card;
+    min-height: 100px;
+    padding: $spacing-sm;
+    text-align: center;
+    cursor: pointer;
+    border-radius: $radius-md;
+    transition: all $transition-base;
+    position: relative;
+    overflow: hidden;
+
+    @media (max-width: $tablet) {
+      min-height: 120px;
+      padding: $spacing-sm;
+      min-width: 120px;
+    }
+
+    @media (max-width: $mobile) {
+      min-height: 100px;
+      padding: $spacing-xs;
+      min-width: 100px;
+    }
+
+    // Gradient hover overlay
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: $gradient-card;
+      opacity: 0;
+      transition: opacity $transition-base;
+      pointer-events: none;
+    }
+
+    &:hover {
+      box-shadow: $shadow-lg, $shadow-glow;
+
+      &::before {
+        opacity: 1;
+      }
+    }
+
+    .day-name {
+      font-size: $font-size-xs;
+      color: $text-muted;
+      margin-bottom: $spacing-xs;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: $font-weight-semibold;
+    }
+
+    .day-num {
+      font-size: $font-size-xl;
+      font-weight: $font-weight-bold;
+      margin-bottom: $spacing-md;
+      color: $text-primary;
+    }
+
+    .indicators {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      color: $text-muted;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: $font-weight-semibold;
+      min-height: 20px;
+    }
+
+    &.today {
+      background: rgba($accent-primary, 0.1);
+      border: 2px solid $accent-primary;
+      box-shadow: $shadow-md, $shadow-glow;
+
+      .day-num {
+        @include text-gradient;
+      }
+    }
+
+    &.selected {
+      background: linear-gradient(135deg, rgba(127, 29, 29, 0.3) 0%, rgba(69, 10, 10, 0.3) 100%);
+      border: 2px solid #7f1d1d;
+      box-shadow: 0 0 20px rgba(127, 29, 29, 0.5);
+
+      &::before {
+        opacity: 0.5;
+      }
+
+      .day-num {
+        color: #ffffff;
+      }
+    }
+
+    &:active {
+      background: linear-gradient(135deg, rgba(127, 29, 29, 0.5) 0%, rgba(69, 10, 10, 0.5) 100%);
+      border-color: #991b1b;
+    }
+  }
+}
+
+// Calendar Navigation
+.calendar-navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-xl;
+  gap: $spacing-sm;
+  flex-wrap: nowrap;
+
+  @media (max-width: $mobile) {
+    gap: $spacing-xs;
+    margin-bottom: $spacing-lg;
+  }
+
+  .nav-btn {
+    padding: $spacing-md;
+    background: $gradient-primary;
+    color: $text-primary;
+    border: none;
+    border-radius: $radius-md;
+    cursor: pointer;
+    font-size: $font-size-xl;
+    font-weight: $font-weight-semibold;
+    font-family: $font-primary;
+    transition: all $transition-base;
+    box-shadow: $shadow-md;
+    white-space: nowrap;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    &:hover {
+      background: linear-gradient(135deg, #7f1d1d 0%, #450a0a 100%);
+      box-shadow: $shadow-lg;
+    }
+
+    &:active {
+    }
+
+    @media (max-width: $tablet) {
+      width: 40px;
+      height: 40px;
+      font-size: $font-size-lg;
+      padding: $spacing-sm;
+    }
+
+    @media (max-width: $mobile) {
+      width: 36px;
+      height: 36px;
+      font-size: $font-size-base;
+      padding: $spacing-xs;
+    }
+  }
+
+  .month-year {
+    flex: 1;
+    text-align: center;
+    min-width: 120px;
+
+    @media (max-width: $mobile) {
+      min-width: 100px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: $font-size-xl;
+      font-weight: $font-weight-bold;
+      color: #ffffff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      @media (max-width: $tablet) {
+        font-size: $font-size-lg;
+      }
+
+      @media (max-width: $mobile) {
+        font-size: $font-size-sm;
+      }
+    }
+  }
+}
+
+.calendar-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: $spacing-md;
+  margin-bottom: $spacing-xl;
+
+  .btn-today {
+    padding: $spacing-sm $spacing-xl;
+    background: rgba($dark-bg-elevated, 0.6);
+    color: $text-primary;
+    border: 1px solid $border-primary;
+    border-radius: $radius-full;
+    cursor: pointer;
+    font-size: $font-size-base;
+    font-weight: $font-weight-semibold;
+    font-family: $font-primary;
+    transition: all $transition-base;
+
+    &:hover {
+      background: rgba($dark-bg-elevated, 0.9);
+      border-color: $accent-primary;
+      box-shadow: $shadow-glow;
+    }
+
+    @media (max-width: $tablet) {
+      padding: $spacing-xs $spacing-md;
+      font-size: $font-size-sm;
+    }
+
+    @media (max-width: $mobile) {
+      padding: $spacing-xs $spacing-sm;
+      font-size: $font-size-xs;
+    }
+  }
+
+  @media (max-width: $mobile) {
+    gap: $spacing-xs;
+    flex-wrap: wrap;
+  }
+}
+
+// Day Details
+.day-details-container {
+  margin-bottom: $spacing-lg;
+}
+
+.day-details {
+  @include glass-card;
+  padding: $spacing-lg;
+  border-radius: $radius-lg;
+  position: relative;
+
+  h3 {
+    margin-bottom: $spacing-lg;
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    @include text-gradient;
+  }
+
+  .select-day-prompt {
+    text-align: center;
+    color: $text-muted;
+    padding: $spacing-2xl;
+    font-size: $font-size-lg;
+  }
+}
+
+.day-details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-lg;
+  gap: $spacing-md;
+  flex-wrap: wrap;
+
+  h3 {
+    margin: 0;
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: #ffffff;
+  }
+
+  .day-quick-actions {
+    display: flex;
+    gap: $spacing-xs;
+    flex-wrap: nowrap;
+
+    .btn-sm {
+      padding: $spacing-sm $spacing-md;
+      font-size: $font-size-sm;
+      font-weight: $font-weight-semibold;
+      font-family: $font-primary;
+      white-space: nowrap;
+      min-width: auto;
+      width: auto;
+      border-radius: $radius-md;
+      background: $gradient-primary;
+      border: none;
+      color: $text-primary;
+      box-shadow: $shadow-sm;
+      transition: all $transition-base;
+
+      &:hover {
+        background: linear-gradient(135deg, #7f1d1d 0%, #450a0a 100%);
+        box-shadow: $shadow-md;
+      }
+
+      &:active {
+      }
+    }
+
+    @media (max-width: $mobile) {
+      flex-wrap: wrap;
+    }
+  }
+}
+
+.detail-item {
+  padding: $spacing-md 0;
+  border-bottom: 1px solid $border-secondary;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+  transition: all $transition-fast;
+
+  &:last-of-type {
+    border-bottom: none;
+  }
+
+  &:hover {
+    padding-left: $spacing-sm;
+  }
+
+  strong {
+    font-size: $font-size-base;
+    color: $text-primary;
+    font-weight: $font-weight-semibold;
+  }
+
+  span {
+    color: $text-secondary;
+    font-size: $font-size-sm;
+  }
+
+  &.empty {
+    opacity: 0.4;
+  }
+}
+
+.drinks-list {
+  list-style: none;
+  padding-left: $spacing-lg;
+  margin: $spacing-sm 0 0 0;
+
+  li {
+    padding: $spacing-xs 0;
+    color: $text-secondary;
+    font-size: $font-size-sm;
+    position: relative;
+    padding-left: $spacing-md;
+
+    &:before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: $accent-primary;
+      font-weight: $font-weight-bold;
+    }
+  }
+}
+
+// Quick Stats
+.quick-stats {
+  margin-top: $spacing-lg;
+  padding: $spacing-lg;
+  @include glass-card;
+  border-radius: $radius-lg;
+  position: relative;
+
+  h3 {
+    margin-bottom: $spacing-lg;
+    font-size: $font-size-lg;
+    font-weight: $font-weight-bold;
+    color: $text-primary;
+  }
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-sm;
+
+  @media (min-width: $mobile) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  @media (min-width: $tablet) {
+    gap: $spacing-md;
+  }
+}
+
+.stat-item {
+  @include glass-card;
+  padding: $spacing-md;
+  border-radius: $radius-md;
+  text-align: center;
+  transition: all $transition-base;
+  position: relative;
+  overflow: hidden;
+
+  @media (min-width: $tablet) {
+    padding: $spacing-lg;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: $gradient-card;
+    opacity: 0;
+    transition: opacity $transition-base;
+  }
+
+  &:hover {
+    box-shadow: $shadow-lg;
+
+    &::before {
+      opacity: 1;
+    }
+  }
+
+  .stat-label {
+    font-size: $font-size-xs;
+    color: $text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    position: relative;
+    z-index: 1;
+    margin-bottom: $spacing-sm;
+  }
+
+  .stat-value {
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-bold;
+    color: $text-primary;
+    position: relative;
+    z-index: 1;
+  }
+}
+
+// Month View
+.calendar-month {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: $spacing-xs;
+  margin-bottom: $spacing-xl;
+
+  @media (max-width: $mobile) {
+    gap: 2px;
+  }
+}
+
+.month-day-header {
+  @include glass-card;
+  padding: $spacing-sm;
+  text-align: center;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-bold;
+  color: $text-muted;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: $radius-sm;
+  background: rgba($dark-bg-elevated, 0.8);
+
+  @media (max-width: $mobile) {
+    padding: $spacing-xs;
+    font-size: 10px;
+  }
+}
+
+.month-day {
+  @include glass-card;
+  min-height: 80px;
+  padding: $spacing-sm;
+  text-align: center;
+  cursor: pointer;
+  border-radius: $radius-md;
+  transition: all $transition-base;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+
+  @media (max-width: $mobile) {
+    min-height: 60px;
+    padding: $spacing-xs;
+  }
+
+  // Gradient hover overlay
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: $gradient-card;
+    opacity: 0;
+    transition: opacity $transition-base;
+    pointer-events: none;
+  }
+
+  &:hover {
+    box-shadow: $shadow-md, $shadow-glow;
+
+    &::before {
+      opacity: 1;
+    }
+  }
+
+  .month-day-number {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-bold;
+    color: $text-primary;
+    margin-bottom: $spacing-xs;
+    position: relative;
+    z-index: 1;
+
+    @media (max-width: $mobile) {
+      font-size: $font-size-base;
+    }
+  }
+
+  .month-day-indicator {
+    font-size: 24px;
+    color: $text-muted;
+    position: relative;
+    z-index: 1;
+
+    @media (max-width: $mobile) {
+      font-size: 20px;
+    }
+  }
+
+  &.other-month {
+    opacity: 0.3;
+
+    &:hover {
+      opacity: 0.5;
+    }
+
+    .month-day-number {
+      color: $text-muted;
+    }
+  }
+
+  &.today {
+    background: rgba($accent-primary, 0.1);
+    border: 2px solid $accent-primary;
+    box-shadow: $shadow-md, $shadow-glow;
+
+    
+
+    .month-day-number {
+      @include text-gradient;
+    }
+  }
+
+  &.selected {
+    background: linear-gradient(135deg, rgba(127, 29, 29, 0.3) 0%, rgba(69, 10, 10, 0.3) 100%);
+    border: 2px solid #7f1d1d;
+    box-shadow: 0 0 20px rgba(127, 29, 29, 0.5);
+
+    &::before {
+      opacity: 0.5;
+    }
+
+    .month-day-number {
+      color: #ffffff;
+    }
+  }
+
+  &:active {
+    background: linear-gradient(135deg, rgba(127, 29, 29, 0.5) 0%, rgba(69, 10, 10, 0.5) 100%);
+    border-color: #991b1b;
+  }
+}

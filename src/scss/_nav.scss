@@ -1,0 +1,163 @@
+// Navigation Styles
+#main-nav {
+  z-index: 1000;
+  border-bottom: 1px solid $border-primary;
+  padding: $spacing-sm 0;
+}
+
+.nav-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 $spacing-lg;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-lg;
+  position: relative;
+}
+
+.nav-links {
+  order: 1;
+  display: flex;
+  gap: $spacing-sm;
+  align-items: center;
+}
+
+.nav-logo {
+  order: 2;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  flex-shrink: 0;
+  margin-top: 40px;
+
+  a {
+    display: inline-block;
+    text-decoration: none;
+
+    img {
+      width: 60px;
+      height: auto;
+      display: block;
+    }
+  }
+}
+
+.nav-user {
+  order: 3;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-sm $spacing-md;
+  color: $text-secondary;
+  text-decoration: none;
+  border-radius: $radius-lg;
+  transition: all $transition-base;
+  font-weight: $font-weight-medium;
+  font-size: $font-size-sm;
+
+  .nav-icon {
+    font-size: 20px;
+  }
+
+  .nav-text {
+    display: inline;
+  }
+
+  &:hover {
+    background: rgba(107, 114, 128, 0.15);
+    color: $text-primary;
+  }
+
+  &.active {
+    background: $gradient-primary;
+    color: #ffffff;
+    box-shadow: $shadow-glow;
+  }
+}
+
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: $radius-full;
+  border: 2px solid $accent-primary;
+}
+
+.logout-btn {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  color: $text-secondary;
+  text-decoration: none;
+  border-radius: $radius-full;
+  font-size: $font-size-xl;
+  transition: all $transition-base;
+
+  &:hover {
+    background: rgba(107, 114, 128, 0.2);
+    color: $text-primary;
+  }
+}
+
+// Mobile responsiveness
+@media (max-width: 640px) {
+  #main-nav {
+    padding: $spacing-xs 0;
+  }
+
+  .nav-container {
+    padding: 0 $spacing-md;
+    gap: $spacing-xs;
+  }
+
+  .nav-links {
+    gap: $spacing-xs;
+  }
+
+  .nav-logo {
+    a img {
+      width: 50px;
+    }
+  }
+
+  .nav-link {
+    padding: $spacing-sm;
+    min-width: 44px;
+    min-height: 44px;
+    justify-content: center;
+
+    .nav-icon {
+      font-size: 22px;
+    }
+
+    .nav-text {
+      display: none;
+    }
+  }
+
+  .user-avatar {
+    width: 32px;
+    height: 32px;
+  }
+
+  .logout-btn {
+    width: 36px;
+    height: 36px;
+    font-size: $font-size-lg;
+  }
+}

@@ -1,0 +1,146 @@
+// Modern Dark Theme Layout
+
+// Background Rotator Layers
+.bg-layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transition: opacity 2s ease-in-out;
+  z-index: -1;
+  filter: brightness(0.3) saturate(0.6) grayscale(0.2);
+
+  &.active {
+    opacity: 1;
+  }
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: $font-primary;
+  font-size: $font-size-base;
+  font-weight: $font-weight-normal;
+  color: $text-primary;
+  background: $dark-bg-primary;
+  line-height: 1.6;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+
+  // Animated background
+  &::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(82, 82, 91, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(63, 63, 70, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(107, 114, 128, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: $spacing-lg;
+  position: relative;
+  z-index: 1;
+
+  @media (min-width: $tablet) {
+    padding: $spacing-2xl;
+  }
+
+  @media (min-width: $desktop) {
+    max-width: 1400px;
+  }
+}
+
+.page-header {
+  margin-bottom: $spacing-lg;
+  position: relative;
+  text-align: center;
+
+  h1 {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-extrabold;
+    margin-bottom: $spacing-xs;
+    color: #ffffff;
+    letter-spacing: -0.02em;
+
+    @media (min-width: $tablet) {
+      font-size: $font-size-2xl;
+    }
+  }
+
+  .subtitle {
+    color: $text-secondary;
+    font-size: $font-size-base;
+    font-weight: $font-weight-medium;
+  }
+}
+
+.content-area {
+  @include glass-card;
+  background: transparent;
+  padding: $spacing-lg;
+  border-radius: $radius-lg;
+  margin-bottom: $spacing-lg;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+
+  @media (min-width: $tablet) {
+    padding: $spacing-xl;
+  }
+}
+
+// Scroll Styling
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: $dark-bg-secondary;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $dark-bg-elevated;
+  border-radius: $radius-full;
+
+  &:hover {
+    background: lighten($dark-bg-elevated, 10%);
+  }
+}
+
+// Selection
+::selection {
+  background: rgba($accent-primary, 0.3);
+  color: $text-primary;
+}
+
+::-moz-selection {
+  background: rgba($accent-primary, 0.3);
+  color: $text-primary;
+}

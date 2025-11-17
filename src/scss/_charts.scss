@@ -1,0 +1,386 @@
+// Modern Dark Charts & Analytics Styles
+
+// Page Header Enhancements
+.page-header {
+  .btn-back {
+    padding: $spacing-sm $spacing-lg;
+    background: rgba($dark-bg-elevated, 0.6);
+    border: 1px solid $border-primary;
+    color: $text-primary;
+    border-radius: $radius-md;
+    cursor: pointer;
+    font-size: $font-size-base;
+    font-weight: $font-weight-semibold;
+    font-family: $font-primary;
+    margin-bottom: $spacing-md;
+    transition: all $transition-base;
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-sm;
+
+    &:hover {
+      background: rgba($dark-bg-elevated, 0.9);
+      border-color: $accent-primary;
+      box-shadow: $shadow-glow;
+      transform: translateX(-4px);
+    }
+  }
+}
+
+// Period Selector - Modern Tabs
+.period-selector {
+  display: flex;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-xl;
+  flex-wrap: wrap;
+  padding: $spacing-xs;
+  @include glass-card;
+  border-radius: $radius-lg;
+
+  .period-btn {
+    flex: 1;
+    min-width: 100px;
+    padding: $spacing-md $spacing-lg;
+    border: none;
+    background: transparent;
+    border-radius: $radius-md;
+    cursor: pointer;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    font-family: $font-primary;
+    color: $text-secondary;
+    transition: all $transition-base;
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: $gradient-card;
+      border-radius: $radius-md;
+      opacity: 0;
+      transition: opacity $transition-base;
+    }
+
+    &:hover {
+      color: $text-primary;
+
+      &::before {
+        opacity: 0.5;
+      }
+    }
+
+    &.active {
+      background: $gradient-primary;
+      color: $text-primary;
+      box-shadow: $shadow-md, $shadow-glow-purple;
+
+      &::before {
+        opacity: 0;
+      }
+    }
+  }
+}
+
+// Chart Section
+.chart-section {
+  margin-bottom: $spacing-2xl;
+
+  h2 {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    margin-bottom: $spacing-lg;
+    color: #ffffff;
+  }
+}
+
+.chart-container {
+  position: relative;
+  height: 300px;
+  @include glass-card;
+  padding: $spacing-md;
+  border-radius: $radius-lg;
+
+  @media (min-width: $mobile) {
+    height: 350px;
+    padding: $spacing-lg;
+  }
+
+  @media (min-width: $tablet) {
+    height: 450px;
+  }
+
+  canvas {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+.no-data-message {
+  text-align: center;
+  padding: $spacing-3xl;
+  color: $text-muted;
+  font-size: $font-size-lg;
+  @include glass-card;
+  border-radius: $radius-xl;
+  position: relative;
+}
+
+// Statistics Section
+.stats-section {
+  margin-bottom: $spacing-2xl;
+
+  h2 {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    margin-bottom: $spacing-lg;
+    color: #ffffff;
+  }
+}
+
+.stats-grid-charts {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-md;
+
+  @media (min-width: $tablet) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (min-width: $desktop) {
+    gap: $spacing-lg;
+  }
+}
+
+.stat-card {
+  @include glass-card;
+  padding: $spacing-md;
+  border-radius: $radius-md;
+  text-align: center;
+  transition: all $transition-base;
+  position: relative;
+  overflow: hidden;
+
+  @media (min-width: $tablet) {
+    padding: $spacing-lg;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: $gradient-card;
+    opacity: 0;
+    transition: opacity $transition-base;
+  }
+
+  &:hover {
+    box-shadow: $shadow-lg, $shadow-glow;
+
+    &::before {
+      opacity: 1;
+    }
+  }
+
+  .stat-label {
+    font-size: $font-size-xs;
+    color: $text-muted;
+    margin-bottom: $spacing-sm;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: $font-weight-semibold;
+    position: relative;
+    z-index: 1;
+  }
+
+  .stat-value {
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-extrabold;
+    color: $text-primary;
+    line-height: 1.2;
+    position: relative;
+    z-index: 1;
+
+    &.positive {
+      color: $accent-danger;
+    }
+
+    &.negative {
+      color: $accent-success;
+    }
+
+    .stat-percent {
+      font-size: $font-size-sm;
+      font-weight: $font-weight-medium;
+      color: $text-muted;
+      display: block;
+      margin-top: $spacing-xs;
+    }
+  }
+}
+
+// Meal Statistics - Progress Bars
+.meal-stats {
+  @include glass-card;
+  padding: $spacing-lg;
+  border-radius: $radius-lg;
+  position: relative;
+
+}
+
+.progress-item {
+  margin-bottom: $spacing-lg;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-sm;
+
+  .progress-label {
+    font-size: $font-size-base;
+    font-weight: $font-weight-semibold;
+    color: $text-primary;
+  }
+
+  .progress-value {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-bold;
+    @include text-gradient;
+  }
+}
+
+.progress-bar {
+  height: 6px;
+  background: rgba($dark-bg-elevated, 0.6);
+  border-radius: $radius-full;
+  overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.1) 50%,
+      transparent 100%);
+    animation: shimmer 2s infinite;
+  }
+}
+
+.progress-fill {
+  height: 100%;
+  background: $gradient-accent;
+  border-radius: $radius-full;
+  transition: width $transition-slow;
+  position: relative;
+}
+
+// Export Section
+.export-section {
+  margin-top: $spacing-2xl;
+  padding: $spacing-xl;
+  @include glass-card;
+  border-radius: $radius-xl;
+  position: relative;
+
+  h3 {
+    margin-bottom: $spacing-md;
+    font-size: $font-size-lg;
+    font-weight: $font-weight-bold;
+    color: $text-primary;
+  }
+}
+
+.export-buttons {
+  display: flex;
+  gap: $spacing-md;
+  margin-bottom: $spacing-md;
+}
+
+.btn-export,
+.btn-import {
+  flex: 1;
+  padding: $spacing-md $spacing-xl;
+  border: none;
+  border-radius: $radius-md;
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  font-family: $font-primary;
+  cursor: pointer;
+  transition: all $transition-base;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.1) 0%,
+      transparent 100%);
+    opacity: 0;
+    transition: opacity $transition-base;
+  }
+
+  &:hover::before {
+    opacity: 1;
+  }
+}
+
+.btn-export {
+  background: $gradient-success;
+  color: $text-primary;
+  box-shadow: $shadow-md;
+
+  &:hover {
+    box-shadow: $shadow-lg;
+  }
+}
+
+.btn-import {
+  background: $gradient-primary;
+  color: $text-primary;
+  box-shadow: $shadow-md;
+
+  &:hover {
+    box-shadow: $shadow-lg;
+  }
+}
+
+.export-note {
+  font-size: $font-size-sm;
+  color: $text-muted;
+  margin: 0;
+  text-align: center;
+}
+
+// Shimmer Animation
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+// Pulse Animation
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba($accent-primary, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba($accent-primary, 0.6);
+  }
+}

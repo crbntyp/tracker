@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Save</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #000;
+      color: #fff;
+    }
+    input, button {
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 16px;
+    }
+    button {
+      background: #ff4500;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    #log {
+      background: rgba(255,255,255,0.05);
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+      white-space: pre-wrap;
+      font-family: monospace;
+      font-size: 12px;
+    }
+    .success { color: #10b981; }
+    .error { color: #dc2626; }
+  </style>
+</head>
+<body>
+  <h1>Test Save Entry</h1>
+
+  <div>
+    <label>Date: <input type="date" id="testDate" value="2025-10-10"></label><br>
+    <label>Weight: <input type="number" id="testWeight" value="100" step="0.1"></label><br>
+    <label>Unit: <input type="text" id="testUnit" value="kg"></label><br>
+    <label>Time: <input type="time" id="testTime" value="08:00"></label><br>
+    <button onclick="testSave()">Test Save</button>
+    <button onclick="testFetch()">Test Fetch All</button>
+  </div>
+
+  <div id="log"></div>
+
+  <script>
+    const log = document.getElementById('log');
+
+    function addLog(msg, type = 'info') {
+      const timestamp = new Date().toLocaleTimeString();
+      const className = type === 'error' ? 'error' : type === 'success' ? 'success' : '';
+      log.innerHTML += `<div class="${className}">[${timestamp}] ${msg}</div>`;
+      console.log(msg);
+    }
+
+    // Check auth on load
+    window.addEventListener('DOMContentLoaded', async function() {
+      try {
+        const response = await fetch('/auth/user', { credentials: 'include' });
+        if (response.ok) {
+          const user = await response.json();
+          addLog(`✅ Logged in as: ${user.name} (${user.email})`, 'success');
+        } else {
+          addLog(`❌ NOT LOGGED IN! Please go to the homepage first to log in.`, 'error');
+          addLog(`Visit: http://localhost:3000`, 'error');
+        }
+      } catch (error) {
+        addLog(`❌ Auth check failed: ${error.message}`, 'error');
+      }
+    });
+
+    async function testSave() {
+      log.innerHTML = '';
+      addLog('Starting test save...');
+
+      const date = document.getElementById('testDate').value;
+      const weight = document.getElementById('testWeight').value;
+      const unit = document.getElementById('testUnit').value;
+      const time = document.getElementById('testTime').value;
+
+      addLog(`Input values: date=${date}, weight=${weight}, unit=${unit}, time=${time}`);
+
+      const data = {
+        date: date,
+        weight: {
+          value: parseFloat(weight),
+          unit: unit,
+          time: time,
+          timestamp: Date.now()
+        },
+        lunch: { logged: false },
+        dinner: { logged: false },
+        drinks: [],
+        notes: ''
+      };
+
+      addLog(`Prepared data: ${JSON.stringify(data, null, 2)}`);
+
+      try {
+        addLog('Calling API POST /api/entries...');
+        const response = await fetch('/api/entries', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify(data)
+        });
+
+        addLog(`Response status: ${response.status} ${response.statusText}`);
+
+        if (response.ok) {
+          const result = await response.json();
+          addLog(`SUCCESS! Result: ${JSON.stringify(result, null, 2)}`, 'success');
+        } else {
+          const errorText = await response.text();
+          addLog(`ERROR! Response: ${errorText}`, 'error');
+        }
+      } catch (error) {
+        addLog(`EXCEPTION! ${error.message}`, 'error');
+        console.error(error);
+      }
+    }
+
+    async function testFetch() {
+      log.innerHTML = '';
+      addLog('Fetching all entries...');
+
+      try {
+        const response = await fetch('/api/entries', {
+          credentials: 'include'
+        });
+
+        addLog(`Response status: ${response.status}`);
+
+        if (response.ok) {
+          const entries = await response.json();
+          addLog(`SUCCESS! Found ${entries.length} entries:`, 'success');
+          entries.forEach((entry, i) => {
+            addLog(`  ${i + 1}. Date: ${entry.date}, Weight: ${entry.weight?.value} ${entry.weight?.unit}`);
+          });
+        } else {
+          addLog(`ERROR! ${response.statusText}`, 'error');
+        }
+      } catch (error) {
+        addLog(`EXCEPTION! ${error.message}`, 'error');
+        console.error(error);
+      }
+    }
+  </script>
+</body>
+</html>

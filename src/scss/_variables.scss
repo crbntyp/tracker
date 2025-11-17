@@ -1,0 +1,120 @@
+// Dark Theme Variables - Modern Professional Design
+
+// Base Colors - Carbon Black Theme
+$dark-bg-primary: #0a0a0a;
+$dark-bg-secondary: #0f0f0f;
+$dark-bg-tertiary: #141414;
+$dark-bg-card: rgba(20, 20, 20, 0.6);
+$dark-bg-elevated: #1a1a1a;
+
+// Accent Colors - Metal & Carbon Theme
+$accent-primary: #6b7280;      // Steel Gray
+$accent-secondary: #9ca3af;    // Light Steel
+$accent-success: #4ade80;      // Neon Green
+$accent-warning: #fbbf24;      // Gold
+$accent-danger: #ef4444;       // Red
+$accent-metal: #52525b;        // Dark Metal
+
+// Gradients - Dark Metal
+$gradient-primary: linear-gradient(135deg, #3f3f46 0%, #27272a 100%);
+$gradient-accent: linear-gradient(135deg, $accent-primary 0%, $accent-secondary 100%);
+$gradient-success: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+$gradient-card: linear-gradient(135deg, rgba(82, 82, 91, 0.15) 0%, rgba(39, 39, 42, 0.15) 100%);
+$gradient-overlay: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.9) 100%);
+
+// Text Colors
+$text-primary: #f8fafc;
+$text-secondary: #cbd5e1;
+$text-tertiary: #94a3b8;
+$text-muted: #64748b;
+$text-gradient: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+
+// Border Colors
+$border-primary: rgba(100, 116, 139, 0.3);
+$border-secondary: rgba(100, 116, 139, 0.15);
+$border-glow: rgba(107, 114, 128, 0.4);
+
+// Fonts - Using Monospace
+$font-primary: 'JetBrains Mono', 'Fira Code', 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Courier New', monospace;
+$font-display: 'JetBrains Mono', 'Fira Code', monospace;
+$font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+$font-size-xs: 12px;
+$font-size-sm: 14px;
+$font-size-base: 16px;
+$font-size-lg: 18px;
+$font-size-xl: 24px;
+$font-size-2xl: 32px;
+$font-size-3xl: 40px;
+
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+$font-weight-extrabold: 800;
+
+// Spacing - Minimal Scale
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 12px;
+$spacing-lg: 16px;
+$spacing-xl: 24px;
+$spacing-2xl: 32px;
+$spacing-3xl: 48px;
+
+// Breakpoints
+$mobile: 480px;
+$tablet: 768px;
+$desktop: 1024px;
+$wide: 1440px;
+
+// Shadows - Removed (except content-area)
+$shadow-sm: none;
+$shadow-md: none;
+$shadow-lg: none;
+$shadow-xl: none;
+$shadow-glow: none;
+$shadow-glow-purple: none;
+
+// Border Radius - Minimal
+$radius-sm: 4px;
+$radius-md: 6px;
+$radius-lg: 8px;
+$radius-xl: 10px;
+$radius-2xl: 12px;
+$radius-full: 9999px;
+
+// Transitions
+$transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+$transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+$transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+$transition-spring: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+// Backdrop Blur
+$blur-sm: blur(8px);
+$blur-md: blur(16px);
+$blur-lg: blur(24px);
+
+// Glass Effect - Dark Carbon
+@mixin glass-card {
+  background: rgba(20, 20, 20, 0.5);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(100, 116, 139, 0.25);
+}
+
+// Hover Glow Effect - Metal
+@mixin hover-glow($color: $accent-primary) {
+  transition: all $transition-base;
+
+  &:hover {
+    border-color: rgba($color, 0.5);
+  }
+}
+
+// Text Gradient
+@mixin text-gradient {
+  background: $text-gradient;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
