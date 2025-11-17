@@ -12,18 +12,8 @@ ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 
 // Load environment variables from .env file if it exists
-// Try multiple locations
-$envPaths = [
-    __DIR__ . '/../../.env.php',           // Root of tracker folder
-    __DIR__ . '/../.env.php',              // php folder
-    $_SERVER['DOCUMENT_ROOT'] . '/tracker/.env.php',  // Absolute path
-];
-
-foreach ($envPaths as $envPath) {
-    if (file_exists($envPath)) {
-        require_once $envPath;
-        break;
-    }
+if (file_exists(__DIR__ . '/../../.env.php')) {
+    require_once __DIR__ . '/../../.env.php';
 }
 
 // Database configuration
