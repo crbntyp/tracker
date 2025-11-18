@@ -143,7 +143,7 @@ function showDayDetails(dateStr) {
 
         <!-- Gym -->
         <div class="detail-item">
-          <strong>Gym:</strong>
+          <strong>Gym or 3k+ walks:</strong>
           <span>${entry.gym ? '✓ Yes' : '✗ No'}</span>
         </div>
 
