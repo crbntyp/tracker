@@ -120,7 +120,7 @@ function showDayDetails(dateStr) {
           `<button class="btn btn-sm" onclick="editWeight('${dateStr}', ${entry.weight.value}, '${entry.weight.unit}', '${entry.weight.time}')"><i class="las la-edit"></i> Weight</button>` :
           `<button class="btn btn-sm" onclick="openModalForDate('weightModal', '${dateStr}')"><i class="las la-plus"></i> Weight</button>`
         }
-        <button class="btn btn-sm" onclick="openModalForDateGym('${dateStr}', ${entry.gym})"><i class="las ${entry.gym ? 'la-edit' : 'la-plus'}"></i> Gym</button>
+        <button class="btn btn-sm" onclick="openModalForDateGym('${dateStr}', ${entry.gym})"><i class="las ${entry.gym ? 'la-edit' : 'la-plus'}"></i> Gym/Walks</button>
         <button class="btn btn-sm" onclick="openModalForDateSupplements('${dateStr}')"><i class="las ${entry.supplements ? 'la-edit' : 'la-plus'}"></i> Supplements</button>
         <button class="btn btn-sm" onclick="openModalForDateSteps('${dateStr}')"><i class="las ${entry.steps ? 'la-edit' : 'la-plus'}"></i> Steps</button>
       </div>
