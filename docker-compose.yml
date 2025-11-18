@@ -1,15 +1,37 @@
-version: '3.8'
-
 services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: tracker
+      MYSQL_USER: tracker_user
+      MYSQL_PASSWORD: tracker_password
+      MYSQL_ROOT_PASSWORD: root_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   web:
     build: .
     ports:
       - "8000:80"
     volumes:
-      # Mount source files for live editing
-      - ./:/var/www/html/
-      # Don't mount node_modules
-      - /var/www/html/node_modules
+      # Mount dist folder (compiled files)
+      - ./dist:/var/www/html/
+      # Mount .env.php from root
+      - ./.env.php:/var/www/html/.env.php
     environment:
       - APACHE_DOCUMENT_ROOT=/var/www/html
+    depends_on:
+      db:
+        condition: service_healthy
     restart: unless-stopped
+
+volumes:
+  mysql_data:

@@ -7,13 +7,43 @@ let viewMode = 'week'; // 'week' or 'month'
 
 // Initialize calendar
 function initCalendar() {
-  renderWeekView(currentWeekStart);
-  setupCalendarNavigation();
-  updateMonthYearDisplay();
+  // Skeletons are already showing from HTML initialization
+  // Small delay to show skeletons, then load real data
+  setTimeout(() => {
+    renderWeekView(currentWeekStart);
+    setupCalendarNavigation();
+    updateMonthYearDisplay();
 
-  // Auto-select today's date
-  const today = getDateString(new Date());
-  selectDay(today);
+    // Auto-select today's date
+    const today = getDateString(new Date());
+    selectDay(today);
+  }, 300);
+}
+
+// Show week skeleton
+function showWeekSkeleton() {
+  const container = document.getElementById('calendar-week');
+  if (!container) return;
+
+  container.innerHTML = `
+    <div style="grid-column: 1 / -1; height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;">
+      <div class="loading-spinner"></div>
+      <p style="color: #94a3b8; font-size: 16px; font-weight: 500;">Hang tight champ, loading...</p>
+    </div>
+  `;
+}
+
+// Show day details skeleton
+function showDayDetailsSkeleton() {
+  const detailsEl = document.getElementById('day-details');
+  if (!detailsEl) return;
+
+  detailsEl.innerHTML = `
+    <div style="height: 300px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;">
+      <div class="loading-spinner"></div>
+      <p style="color: #94a3b8; font-size: 16px; font-weight: 500;">Hang tight champ, loading...</p>
+    </div>
+  `;
 }
 
 // Render week view
@@ -21,6 +51,8 @@ function renderWeekView(weekStart) {
   const container = document.getElementById('calendar-week');
   if (!container) return;
 
+  // Add fade-in to container
+  container.classList.add('fade-in');
   container.innerHTML = '';
 
   const weekDates = getWeekDates(weekStart);
@@ -140,6 +172,10 @@ function showDayDetails(dateStr) {
   `;
 
   detailsEl.innerHTML = html;
+  detailsEl.classList.add('fade-in');
+
+  // Remove fade-in class after animation completes to allow re-triggering
+  setTimeout(() => detailsEl.classList.remove('fade-in'), 300);
 }
 
 // Save diary entry

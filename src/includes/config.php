@@ -1,22 +1,23 @@
 <?php
 // Configuration file for PHP version
 
-// Start session
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
 // Error reporting (disable in production)
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 
+// Start session early (before any output)
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 // Load environment variables from .env file if it exists
 // Try multiple locations
 $envPaths = [
-    __DIR__ . '/../../.env.php',           // Root of tracker folder
-    __DIR__ . '/../.env.php',              // php folder
-    $_SERVER['DOCUMENT_ROOT'] . '/tracker/.env.php',  // Absolute path
+    __DIR__ . '/../.env.php',              // Docker: mounted to /var/www/html/.env.php
+    __DIR__ . '/../../.env.php',           // Production: root of tracker folder
+    $_SERVER['DOCUMENT_ROOT'] . '/.env.php',          // Absolute: server root
+    $_SERVER['DOCUMENT_ROOT'] . '/tracker/.env.php',  // Absolute: subfolder
 ];
 
 foreach ($envPaths as $envPath) {

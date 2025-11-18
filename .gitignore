@@ -1,12 +1,9 @@
 # Dependencies
 node_modules/
 
-# Build outputs (compiled to root)
-*.css.map
-/css/
-/*.html
-!src/*.html
+# Build outputs (compiled to dist/)
 dist/
+*.css.map
 
 # OS files
 .DS_Store

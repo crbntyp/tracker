@@ -6,3 +6,4 @@ const BASE_PATH = window.location.pathname.includes('/tracker/') ? '/tracker' : 
 function buildPath(path) {
   return BASE_PATH + path;
 }
+// test change

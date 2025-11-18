@@ -27,6 +27,69 @@
   }
 }
 
+// Chart Tabs
+.chart-tabs {
+  display: flex;
+  gap: $spacing-xl;
+  margin-bottom: $spacing-xl;
+  border-bottom: 1px solid $border-primary;
+
+  @media (max-width: $mobile) {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .chart-tab {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    padding: $spacing-md 0;
+    border: none;
+    background: transparent;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    font-size: $font-size-base;
+    font-weight: $font-weight-semibold;
+    font-family: $font-primary;
+    color: $text-secondary;
+    transition: all $transition-base;
+
+    @media (max-width: $mobile) {
+      padding: $spacing-md;
+      border-bottom: 1px solid $border-primary;
+      border-left: 2px solid transparent;
+    }
+
+    i {
+      font-size: 30px;
+    }
+
+    &:hover {
+      color: $text-primary;
+    }
+
+    &.active {
+      color: $text-primary;
+      border-bottom-color: $accent-primary;
+
+      @media (max-width: $mobile) {
+        border-bottom-color: $border-primary;
+        border-left-color: $accent-primary;
+      }
+    }
+  }
+}
+
+// Tab Content
+.tab-content {
+  display: none;
+
+  &.active {
+    display: block;
+    animation: fadeIn 0.3s ease-out;
+  }
+}
+
 // Period Selector - Modern Tabs
 .period-selector {
   display: flex;

@@ -4,6 +4,7 @@ let weightChart = null;
 let changeRateChart = null;
 let weeklyComparisonChart = null;
 let calorieChart = null;
+let stepsChart = null;
 let currentPeriod = 365; // Default to All Time
 
 // Chart.js defaults for dark theme
@@ -13,16 +14,107 @@ Chart.defaults.font.family = "'Muli', -apple-system, BlinkMacSystemFont, 'Segoe 
 
 // Initialize charts page
 function initCharts() {
-  initWeightChart(currentPeriod);
-  initChangeRateChart(currentPeriod);
-  initWeeklyComparisonChart(currentPeriod);
-  displayStatistics(currentPeriod);
-  setupPeriodButtons();
+  // Skeletons are already showing from HTML initialization
+  // Small delay to show skeletons, then load real data
+  setTimeout(() => {
+    const chartsGrid = document.querySelector('.charts-grid');
+    if (chartsGrid) chartsGrid.classList.add('fade-in');
+
+    initWeightChart(currentPeriod);
+    initChangeRateChart(currentPeriod);
+    initWeeklyComparisonChart(currentPeriod);
+    initStepsChart(currentPeriod);
+    displayStatistics(currentPeriod);
+    setupPeriodButtons();
+    setupTabButtons();
+  }, 300);
+}
+
+// Setup tab buttons
+function setupTabButtons() {
+  const tabButtons = document.querySelectorAll('.chart-tab');
+  const tabContents = document.querySelectorAll('.tab-content');
+
+  tabButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      const tabName = this.getAttribute('data-tab');
+
+      // Remove active class from all tabs and contents
+      tabButtons.forEach(btn => btn.classList.remove('active'));
+      tabContents.forEach(content => content.classList.remove('active'));
+
+      // Add active class to clicked tab and corresponding content
+      this.classList.add('active');
+      document.getElementById(`${tabName}-tab`).classList.add('active');
+    });
+  });
+}
+
+// Show charts skeleton
+function showChartsSkeleton() {
+  const loadingHTML = `
+    <div style="height: 300px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;">
+      <div class="loading-spinner"></div>
+      <p style="color: #94a3b8; font-size: 16px; font-weight: 500;">Hang tight champ, loading...</p>
+    </div>
+  `;
+
+  // Weight chart skeleton
+  const weightCanvas = document.getElementById('weightChart');
+  if (weightCanvas && weightCanvas.parentElement) {
+    weightCanvas.parentElement.innerHTML = loadingHTML;
+  }
+
+  // Change rate chart skeleton
+  const changeCanvas = document.getElementById('changeRateChart');
+  if (changeCanvas && changeCanvas.parentElement) {
+    changeCanvas.parentElement.innerHTML = loadingHTML;
+  }
+
+  // Weekly comparison chart skeleton
+  const weeklyCanvas = document.getElementById('weeklyComparisonChart');
+  if (weeklyCanvas && weeklyCanvas.parentElement) {
+    weeklyCanvas.parentElement.innerHTML = loadingHTML;
+  }
+
+  // Steps chart skeleton
+  const stepsCanvas = document.getElementById('stepsChart');
+  if (stepsCanvas && stepsCanvas.parentElement) {
+    stepsCanvas.parentElement.innerHTML = loadingHTML;
+  }
+
+  // Statistics skeleton
+  const statsContainer = document.getElementById('weightStats');
+  if (statsContainer) {
+    statsContainer.innerHTML = `
+      <div style="height: 100px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;">
+        <div class="loading-spinner"></div>
+        <p style="color: #94a3b8; font-size: 16px; font-weight: 500;">Hang tight champ, loading...</p>
+      </div>
+    `;
+  }
 }
 
 // Initialize weight chart
 function initWeightChart(days) {
-  const canvas = document.getElementById('weightChart');
+  let canvas = document.getElementById('weightChart');
+
+  // Recreate canvas if it was destroyed by loading skeleton
+  if (!canvas) {
+    // Find the chart container by searching through chart-sections
+    const sections = document.querySelectorAll('.chart-section');
+    for (const section of sections) {
+      if (section.textContent.includes('Weight Trend')) {
+        const container = section.querySelector('.chart-container');
+        if (container) {
+          container.innerHTML = '<canvas id="weightChart"></canvas>';
+          canvas = document.getElementById('weightChart');
+          break;
+        }
+      }
+    }
+  }
+
   if (!canvas) return;
 
   const entries = getLastNDaysEntries(days);
@@ -243,6 +335,7 @@ function setupPeriodButtons() {
       initWeightChart(period);
       initChangeRateChart(period);
       initWeeklyComparisonChart(period);
+      initStepsChart(period);
       displayStatistics(period);
     });
   });
@@ -266,7 +359,23 @@ function calculateMovingAverage(data, windowSize) {
 
 // Initialize weight change rate chart
 function initChangeRateChart(days) {
-  const canvas = document.getElementById('changeRateChart');
+  let canvas = document.getElementById('changeRateChart');
+
+  // Recreate canvas if it was destroyed by loading skeleton
+  if (!canvas) {
+    const sections = document.querySelectorAll('.chart-section');
+    for (const section of sections) {
+      if (section.textContent.includes('Weight Change Rate')) {
+        const container = section.querySelector('.chart-container');
+        if (container) {
+          container.innerHTML = '<canvas id="changeRateChart"></canvas>';
+          canvas = document.getElementById('changeRateChart');
+          break;
+        }
+      }
+    }
+  }
+
   if (!canvas) return;
 
   const entries = getLastNDaysEntries(days);
@@ -344,7 +453,23 @@ function initChangeRateChart(days) {
 
 // Initialize weekly comparison chart
 function initWeeklyComparisonChart(days) {
-  const canvas = document.getElementById('weeklyComparisonChart');
+  let canvas = document.getElementById('weeklyComparisonChart');
+
+  // Recreate canvas if it was destroyed by loading skeleton
+  if (!canvas) {
+    const sections = document.querySelectorAll('.chart-section');
+    for (const section of sections) {
+      if (section.textContent.includes('Weekly Average')) {
+        const container = section.querySelector('.chart-container');
+        if (container) {
+          container.innerHTML = '<canvas id="weeklyComparisonChart"></canvas>';
+          canvas = document.getElementById('weeklyComparisonChart');
+          break;
+        }
+      }
+    }
+  }
+
   if (!canvas) return;
 
   const entries = getLastNDaysEntries(days);
@@ -407,6 +532,154 @@ function initWeeklyComparisonChart(days) {
         x: {
           grid: { display: false }
         }
+      }
+    }
+  });
+}
+
+// Initialize steps chart
+function initStepsChart(days) {
+  let canvas = document.getElementById('stepsChart');
+
+  // Recreate canvas if it was destroyed by loading skeleton
+  if (!canvas) {
+    const sections = document.querySelectorAll('.chart-section');
+    for (const section of sections) {
+      if (section.textContent.includes('Steps Trend')) {
+        const container = section.querySelector('.chart-container');
+        if (container) {
+          container.innerHTML = '<canvas id="stepsChart"></canvas>';
+          canvas = document.getElementById('stepsChart');
+          break;
+        }
+      }
+    }
+  }
+
+  if (!canvas) return;
+
+  const entries = getLastNDaysEntries(days);
+  const stepsData = entries
+    .filter(e => e.steps && e.steps > 0)
+    .map(e => ({ date: e.date, steps: e.steps }))
+    .sort((a, b) => a.date.localeCompare(b.date));
+
+  if (stepsData.length === 0) {
+    canvas.parentElement.innerHTML = '<p class="no-data-message">No steps data available yet. Start tracking your steps to see trends!</p>';
+    return;
+  }
+
+  const labels = stepsData.map(d => formatDateShort(d.date));
+  const data = stepsData.map(d => d.steps);
+
+  // Calculate 7-day moving average
+  const movingAverage = calculateMovingAverage(data, 7);
+
+  // Destroy existing chart if it exists
+  if (stepsChart) {
+    stepsChart.destroy();
+  }
+
+  const ctx = canvas.getContext('2d');
+  stepsChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Steps',
+        data: data,
+        borderColor: '#60a5fa',
+        backgroundColor: 'rgba(96, 165, 250, 0.15)',
+        tension: 0.4,
+        fill: true,
+        pointRadius: 5,
+        pointHoverRadius: 8,
+        pointBackgroundColor: '#60a5fa',
+        pointBorderColor: '#0a0a0a',
+        pointBorderWidth: 3,
+        pointHoverBackgroundColor: '#3b82f6',
+        pointHoverBorderColor: '#fff',
+        pointHoverBorderWidth: 3,
+        borderWidth: 3
+      }, {
+        label: '7-Day Average',
+        data: movingAverage,
+        borderColor: '#34d399',
+        backgroundColor: 'transparent',
+        tension: 0.4,
+        fill: false,
+        pointRadius: 3,
+        pointHoverRadius: 6,
+        pointBackgroundColor: '#34d399',
+        borderWidth: 2,
+        borderDash: [5, 5]
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          backgroundColor: 'rgba(17, 17, 17, 0.95)',
+          titleColor: '#f8fafc',
+          bodyColor: '#cbd5e1',
+          borderColor: 'rgba(96, 165, 250, 0.3)',
+          borderWidth: 1,
+          padding: 16,
+          titleFont: {
+            size: 14,
+            weight: '600'
+          },
+          bodyFont: {
+            size: 13,
+            weight: '500'
+          },
+          displayColors: false,
+          callbacks: {
+            label: function(context) {
+              return `Steps: ${context.parsed.y.toLocaleString()}`;
+            }
+          }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          grid: {
+            color: 'rgba(100, 116, 139, 0.1)',
+            drawBorder: false
+          },
+          ticks: {
+            color: '#94a3b8',
+            font: {
+              size: 12,
+              weight: '500'
+            },
+            callback: function(value) {
+              return value.toLocaleString();
+            }
+          }
+        },
+        x: {
+          grid: {
+            display: false,
+            drawBorder: false
+          },
+          ticks: {
+            color: '#94a3b8',
+            font: {
+              size: 12,
+              weight: '500'
+            }
+          }
+        }
+      },
+      interaction: {
+        intersect: false,
+        mode: 'index'
       }
     }
   });
@@ -494,13 +767,4 @@ function initCalorieChart(days) {
   });
 }
 
-// Initialize when page loads
-if (document.getElementById('weightChart')) {
-  document.addEventListener('DOMContentLoaded', async function() {
-    // Wait for data to load
-    if (typeof initStorage === 'function') {
-      await initStorage();
-    }
-    initCharts();
-  });
-}
+// Initialization is now handled in charts.html

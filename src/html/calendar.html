@@ -168,12 +168,20 @@
   <script>
     // Initialize UI for modals on calendar page
     document.addEventListener('DOMContentLoaded', async function() {
+      // Show skeletons immediately
+      if (typeof showWeekSkeleton === 'function') {
+        showWeekSkeleton();
+      }
+      if (typeof showDayDetailsSkeleton === 'function') {
+        showDayDetailsSkeleton();
+      }
+
       // Wait for data to load
       if (typeof initStorage === 'function') {
         await initStorage();
       }
 
-      // Initialize calendar
+      // Initialize calendar (will replace skeletons with real data)
       if (typeof initCalendar === 'function') {
         initCalendar();
       }

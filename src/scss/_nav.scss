@@ -48,6 +48,13 @@
   margin-left: auto;
   display: flex;
   align-items: center;
+  min-width: 80px;
+  height: 42px;
+  justify-content: flex-end;
+
+  .loading-spinner {
+    margin: 0 $spacing-sm;
+  }
 }
 
 .nav-link {
@@ -63,7 +70,7 @@
   font-size: $font-size-sm;
 
   .nav-icon {
-    font-size: 20px;
+    font-size: 30px;
   }
 
   .nav-text {
@@ -142,7 +149,7 @@
     justify-content: center;
 
     .nav-icon {
-      font-size: 22px;
+      font-size: 30px;
     }
 
     .nav-text {

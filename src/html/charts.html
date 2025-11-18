@@ -36,8 +36,22 @@
         <button class="period-btn active" data-period="365">All Time</button>
       </div>
 
-      <!-- Weight Chart -->
-      <div class="chart-section">
+      <!-- Tabs -->
+      <div class="chart-tabs">
+        <button class="chart-tab active" data-tab="weight">
+          <i class="las la-arrow-circle-down"></i>
+          <span>Weight</span>
+        </button>
+        <button class="chart-tab" data-tab="steps">
+          <i class="las la-walking"></i>
+          <span>Steps</span>
+        </button>
+      </div>
+
+      <!-- Weight Tab Content -->
+      <div class="tab-content active" id="weight-tab">
+        <!-- Weight Chart -->
+        <div class="chart-section">
         <h2>Weight Trend with Moving Average</h2>
         <div class="chart-container">
           <canvas id="weightChart"></canvas>
@@ -67,6 +81,18 @@
           <canvas id="weeklyComparisonChart"></canvas>
         </div>
       </div>
+      </div>
+
+      <!-- Steps Tab Content -->
+      <div class="tab-content" id="steps-tab">
+        <!-- Steps Trend Chart -->
+        <div class="chart-section">
+          <h2>Steps Trend</h2>
+          <div class="chart-container">
+            <canvas id="stepsChart"></canvas>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -76,5 +102,24 @@
   <script src="js/nav.js"></script>
   <script src="js/charts.js"></script>
   <script src="js/bg-rotator.js"></script>
+  <script>
+    // Initialize charts page
+    document.addEventListener('DOMContentLoaded', async function() {
+      // Show skeletons immediately
+      if (typeof showChartsSkeleton === 'function') {
+        showChartsSkeleton();
+      }
+
+      // Wait for data to load
+      if (typeof initStorage === 'function') {
+        await initStorage();
+      }
+
+      // Initialize charts (will replace skeletons with real data)
+      if (typeof initCharts === 'function') {
+        initCharts();
+      }
+    });
+  </script>
 </body>
 </html>
