@@ -27,12 +27,12 @@ class Navigation {
       <div class="nav-container fade-in">
         <div class="nav-links">
           <a href="${buildPath('/')}" class="nav-link ${currentPage.includes('calendar') || currentPage === buildPath('/') ? 'active' : ''}">
-            <i class="las la-calendar-plus nav-icon"></i>
-            <span class="nav-text">Calendar</span>
+            <i class="las la-network-wired nav-icon"></i>
+            <span class="nav-text">Dashboard</span>
           </a>
           <a href="${buildPath('/charts.html')}" class="nav-link ${currentPage.includes('charts') ? 'active' : ''}">
             <i class="las la-chart-pie nav-icon"></i>
-            <span class="nav-text">Charts</span>
+            <span class="nav-text">Stats</span>
           </a>
         </div>
         <div class="nav-logo">
@@ -66,12 +66,12 @@ class Navigation {
       <div class="nav-container fade-in">
         <div class="nav-links">
           <a href="${buildPath('/')}" class="nav-link ${currentPage.includes('calendar') || currentPage === buildPath('/') ? 'active' : ''}">
-            <i class="las la-calendar-plus nav-icon"></i>
-            <span class="nav-text">Calendar</span>
+            <i class="las la-network-wired nav-icon"></i>
+            <span class="nav-text">Dashboard</span>
           </a>
           <a href="${buildPath('/charts.html')}" class="nav-link ${currentPage.includes('charts') ? 'active' : ''}">
             <i class="las la-chart-pie nav-icon"></i>
-            <span class="nav-text">Charts</span>
+            <span class="nav-text">Stats</span>
           </a>
         </div>
         <div class="nav-logo">
