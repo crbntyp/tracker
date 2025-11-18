@@ -9,8 +9,9 @@
 ## Screenshots
 
 <div align="center">
-  <img src="gitimgs/Screenshot 2025-11-17 at 21.30.36.png" alt="Charts View" width="45%">
-  <img src="gitimgs/Screenshot 2025-11-17 at 21.30.45.png" alt="Details View" width="45%">
+  <img src="gitimgs/Screenshot 2025-11-18 at 17.08.51.png" alt="Dashboard View" width="45%">
+  <img src="gitimgs/Screenshot 2025-11-18 at 17.08.58.png" alt="Stats View" width="45%">
+  <img src="gitimgs/Screenshot 2025-11-18 at 17.09.45.png" alt="Charts View" width="45%">
 </div>
 
 ## Features
