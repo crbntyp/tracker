@@ -1,7 +1,5 @@
 <div align="center">
-  <img src="logo.png" alt="Resilient Logo" width="200">
-
-  # Resilient
+  <h1><code>trckr<span style="color: #fed202">__</span></code></h1>
 
   A dark-themed fitness tracking application with Google OAuth authentication. Track your weight, gym attendance, supplements, steps, and daily diary entries.
 </div>
@@ -9,9 +7,9 @@
 ## Screenshots
 
 <div align="center">
-  <img src="gitimgs/Screenshot 2025-11-18 at 17.08.51.png" alt="Dashboard View" width="45%">
-  <img src="gitimgs/Screenshot 2025-11-18 at 17.08.58.png" alt="Stats View" width="45%">
-  <img src="gitimgs/Screenshot 2025-11-18 at 17.09.45.png" alt="Charts View" width="45%">
+  <img src="gitimgs/Screenshot 2025-11-20 at 22.00.24.png" alt="Dashboard View" width="45%">
+  <img src="gitimgs/Screenshot 2025-11-20 at 22.03.37.png" alt="Stats View" width="45%">
+  <img src="gitimgs/Screenshot 2025-11-20 at 22.06.11.png" alt="Charts View" width="45%">
 </div>
 
 ## Features
