@@ -1,5 +1,5 @@
 <div align="center">
-  <h1><code>trckr<span style="color: #fed202">__</span></code></h1>
+  <img src="src/static/favicon.png" alt="trckr__ logo" height="100">
 
   A dark-themed fitness tracking application with Google OAuth authentication. Track your weight, gym attendance, supplements, steps, and daily diary entries.
 </div>
