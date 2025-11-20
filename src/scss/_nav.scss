@@ -43,6 +43,9 @@
         color: white;
         font-size: 40px;
         font-weight: 300;
+        @media (max-width: 550px) {
+          font-size: 25px;
+        }
         span{
           color: #fed202
         }
