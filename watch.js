@@ -20,6 +20,21 @@ function log(message, color = 'reset') {
   console.log(`${colors.cyan}[${timestamp}]${colors.reset} ${colors[color]}${message}${colors.reset}`);
 }
 
+// Debounced Docker restart to prevent 403 errors
+let restartTimeout;
+function restartDockerWeb() {
+  clearTimeout(restartTimeout);
+  restartTimeout = setTimeout(() => {
+    try {
+      log('🔄 Restarting Docker web container...', 'blue');
+      execSync('docker-compose restart web', { stdio: 'ignore' });
+      log('✓ Docker web container restarted', 'green');
+    } catch (error) {
+      log('Failed to restart Docker (this is optional)', 'yellow');
+    }
+  }, 1000); // Wait 1 second after last change
+}
+
 const SRC_DIR = path.join(__dirname, 'src');
 const DIST_DIR = path.join(__dirname, 'dist');
 
@@ -127,6 +142,8 @@ function handleUnlink(filePath) {
 log('🚀 Running initial build...', 'blue');
 try {
   execSync('node build.js', { stdio: 'inherit' });
+  // Restart Docker after initial build to ensure fresh permissions
+  restartDockerWeb();
 } catch (error) {
   log('Initial build failed', 'red');
   process.exit(1);
@@ -198,6 +215,8 @@ sassProcess.stdout.on('data', (data) => {
   const output = data.toString().trim();
   if (output.includes('Compiled')) {
     log('✓ SCSS compiled', 'green');
+    // Restart Docker web container to prevent 403 errors
+    restartDockerWeb();
   }
 });
 

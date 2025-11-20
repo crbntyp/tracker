@@ -80,10 +80,15 @@ body {
   margin-bottom: $spacing-lg;
   position: relative;
   text-align: center;
-
+  span{
+    color: #fed202
+  }
+  h2{
+    font-weight: 300;
+  }
   h1 {
     font-size: $font-size-xl;
-    font-weight: $font-weight-extrabold;
+    font-weight: 300;
     margin-bottom: $spacing-xs;
     color: #ffffff;
     letter-spacing: -0.02em;

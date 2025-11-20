@@ -36,7 +36,7 @@ class Navigation {
           </a>
         </div>
         <div class="nav-logo">
-          <a href="${buildPath('/')}"><img src="${buildPath('/logo.png')}" alt="Logo"></a>
+          <a href="${buildPath('/')}"><h1>trckr<span>__</span></h1></a>
         </div>
         <div class="nav-user">
           <div class="loading-spinner"></div>
@@ -75,7 +75,7 @@ class Navigation {
           </a>
         </div>
         <div class="nav-logo">
-          <a href="${buildPath('/')}"><img src="${buildPath('/logo.png')}" alt="Logo"></a>
+          <a href="${buildPath('/')}"><h1>trckr<span>__</span></h1></a>
         </div>
         <div class="nav-user">
           ${this.user ? `

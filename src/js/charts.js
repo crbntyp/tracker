@@ -55,7 +55,7 @@ function showChartsSkeleton() {
   const loadingHTML = `
     <div style="height: 300px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;">
       <div class="loading-spinner"></div>
-      <p style="color: #94a3b8; font-size: 16px; font-weight: 500;">Hang tight champ, loading...</p>
+      <p style="color: white; font-size: 16px; font-weight: 500;">Hang tight champ, loading...</p>
     </div>
   `;
 
@@ -89,7 +89,7 @@ function showChartsSkeleton() {
     statsContainer.innerHTML = `
       <div style="height: 100px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;">
         <div class="loading-spinner"></div>
-        <p style="color: #94a3b8; font-size: 16px; font-weight: 500;">Hang tight champ, loading...</p>
+        <p style="color: white; font-size: 16px; font-weight: 500;">Hang tight champ, loading...</p>
       </div>
     `;
   }

@@ -29,7 +29,6 @@
   left: 50%;
   transform: translateX(-50%);
   flex-shrink: 0;
-  margin-top: 40px;
 
   a {
     display: inline-block;
@@ -40,6 +39,14 @@
       height: auto;
       display: block;
     }
+      h1{
+        color: white;
+        font-size: 40px;
+        font-weight: 300;
+        span{
+          color: #fed202
+        }
+      }
   }
 }
 
@@ -78,14 +85,14 @@
   }
 
   &:hover {
-    background: rgba(107, 114, 128, 0.15);
+    background: rgba(white, 0.06);
     color: $text-primary;
   }
 
   &.active {
-    background: $gradient-primary;
+    background: rgba(white, 0.05);
     color: #ffffff;
-    box-shadow: $shadow-glow;
+    color: #fed202;
   }
 }
 
@@ -99,7 +106,7 @@
   width: 36px;
   height: 36px;
   border-radius: $radius-full;
-  border: 2px solid $accent-primary;
+  border: 2px solid #fed202;
 }
 
 .logout-btn {
@@ -109,7 +116,7 @@
   align-items: center;
   justify-content: center;
   background: rgba(255, 255, 255, 0.1);
-  color: $text-secondary;
+  color: #fed202;
   text-decoration: none;
   border-radius: $radius-full;
   font-size: $font-size-xl;

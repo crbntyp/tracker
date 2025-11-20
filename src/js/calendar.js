@@ -28,7 +28,7 @@ function showWeekSkeleton() {
   container.innerHTML = `
     <div style="grid-column: 1 / -1; height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;">
       <div class="loading-spinner"></div>
-      <p style="color: #94a3b8; font-size: 16px; font-weight: 500;">Hang tight champ, loading...</p>
+      <p style="color: white; font-size: 16px; font-weight: 500;">Hang tight champ, loading...</p>
     </div>
   `;
 }
@@ -41,7 +41,7 @@ function showDayDetailsSkeleton() {
   detailsEl.innerHTML = `
     <div style="height: 300px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;">
       <div class="loading-spinner"></div>
-      <p style="color: #94a3b8; font-size: 16px; font-weight: 500;">Hang tight champ, loading...</p>
+      <p style="color: white; font-size: 16px; font-weight: 500;">Hang tight champ, loading...</p>
     </div>
   `;
 }
@@ -165,7 +165,7 @@ function showDayDetails(dateStr) {
         <div class="diary-section">
           <strong>Diary</strong>
           <textarea id="diary-${dateStr}" class="diary-textarea" placeholder="Write your diary entry...">${entry.diary || ''}</textarea>
-          <button class="btn btn-sm" onclick="saveDiaryEntry('${dateStr}')"><i class="las la-save"></i> Save Diary</button>
+          <button class="btn btn-sm" onclick="saveDiaryEntry('${dateStr}')">Save</button>
         </div>
       </div>
     </div>

@@ -39,9 +39,9 @@ $border-secondary: rgba(100, 116, 139, 0.15);
 $border-glow: rgba(107, 114, 128, 0.4);
 
 // Fonts - Using Monospace
-$font-primary: 'JetBrains Mono', 'Fira Code', 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Courier New', monospace;
-$font-display: 'JetBrains Mono', 'Fira Code', monospace;
-$font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+$font-primary: 'Geist Mono', 'JetBrains Mono', 'Fira Code', 'SF Mono', 'Monaco', monospace;
+$font-display: 'Geist Mono', 'JetBrains Mono', 'Fira Code', monospace;
+$font-mono: 'Geist Mono', 'JetBrains Mono', 'Fira Code', monospace;
 
 $font-size-xs: 12px;
 $font-size-sm: 14px;
@@ -51,11 +51,11 @@ $font-size-xl: 24px;
 $font-size-2xl: 32px;
 $font-size-3xl: 40px;
 
-$font-weight-normal: 400;
-$font-weight-medium: 500;
-$font-weight-semibold: 600;
-$font-weight-bold: 700;
-$font-weight-extrabold: 800;
+$font-weight-normal: 300;
+$font-weight-medium: 300;
+$font-weight-semibold: 300;
+$font-weight-bold: 300;
+$font-weight-extrabold: 300;
 
 // Spacing - Minimal Scale
 $spacing-xs: 4px;
@@ -119,6 +119,6 @@ $blur-lg: blur(24px);
 @mixin text-gradient {
   background: $text-gradient;
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+ // -webkit-text-fill-color: transparent;
   background-clip: text;
 }

@@ -94,7 +94,7 @@
       justify-content: center;
       align-items: center;
       font-size: 24px;
-      color: #00E676;
+      color: white;
       text-transform: uppercase;
       letter-spacing: 0.05em;
       font-weight: $font-weight-semibold;
@@ -112,22 +112,70 @@
     }
 
     &.selected {
-      background: linear-gradient(135deg, rgba(127, 29, 29, 0.3) 0%, rgba(69, 10, 10, 0.3) 100%);
-      border: 2px solid #7f1d1d;
-      box-shadow: 0 0 20px rgba(127, 29, 29, 0.5);
+      background: rgba(20, 20, 30, 0.8);
+      border: 2px solid #fed202;
+      //box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+      overflow: hidden;
 
+      // First layer - flowing gold mesh
       &::before {
-        opacity: 0.5;
+        content: '';
+        position: absolute;
+        top: -100%;
+        left: -100%;
+        width: 300%;
+        height: 300%;
+        background:
+          radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.5) 0%, transparent 30%),
+          radial-gradient(circle at 80% 70%, rgba(218, 165, 32, 0.4) 0%, transparent 30%),
+          radial-gradient(circle at 50% 50%, rgba(255, 193, 37, 0.35) 0%, transparent 30%),
+          radial-gradient(circle at 70% 20%, rgba(205, 127, 50, 0.4) 0%, transparent 25%),
+          radial-gradient(circle at 30% 80%, rgba(255, 223, 128, 0.3) 0%, transparent 25%);
+        animation: gradientMeshFlow 6s ease-in-out infinite;
+        opacity: 1;
+        pointer-events: none;
+      }
+
+      // Second layer - gold shimmer particles
+      &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image:
+          radial-gradient(2px 2px at 20% 30%, rgba(255, 245, 214, 0.9), transparent),
+          radial-gradient(2px 2px at 60% 70%, rgba(255, 215, 0, 0.8), transparent),
+          radial-gradient(1px 1px at 50% 50%, rgba(218, 165, 32, 0.9), transparent),
+          radial-gradient(1px 1px at 80% 10%, rgba(255, 193, 37, 0.85), transparent),
+          radial-gradient(2px 2px at 90% 60%, rgba(244, 229, 194, 0.9), transparent),
+          radial-gradient(1px 1px at 15% 80%, rgba(205, 127, 50, 0.8), transparent),
+          radial-gradient(2px 2px at 40% 20%, rgba(255, 223, 128, 0.8), transparent),
+          radial-gradient(1px 1px at 65% 45%, rgba(255, 215, 0, 0.75), transparent);
+        background-size: 200% 200%;
+        background-position: 0% 0%;
+        animation: particleFloat 15s linear infinite;
+        opacity: 0.7;
+        pointer-events: none;
+      }
+
+      .day-num,
+      .day-name,
+      .indicators {
+        position: relative;
+        z-index: 2;
       }
 
       .day-num {
-        color: #ffffff;
+        color: #FFF4D6;
+        text-shadow:
+          0 0 15px rgba(255, 215, 0, 0.7),
+          0 0 25px rgba(218, 165, 32, 0.5),
+          0 2px 4px rgba(0, 0, 0, 0.3);
       }
     }
 
     &:active {
-      background: linear-gradient(135deg, rgba(127, 29, 29, 0.5) 0%, rgba(69, 10, 10, 0.5) 100%);
-      border-color: #991b1b;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
+      border-color: rgba(255, 255, 255, 0.5);
     }
   }
 }
@@ -148,16 +196,17 @@
 
   .nav-btn {
     padding: $spacing-md;
-    background: $gradient-primary;
-    color: $text-primary;
+    background: rgba(20, 20, 20, 0.5);
+    backdrop-filter: blur(16px);
     border: none;
     border-radius: $radius-md;
+    color: #fed202;
     cursor: pointer;
     font-size: $font-size-xl;
     font-weight: $font-weight-semibold;
     font-family: $font-primary;
     transition: all $transition-base;
-    box-shadow: $shadow-md;
+    box-shadow: none;
     white-space: nowrap;
     width: 48px;
     height: 48px;
@@ -167,11 +216,12 @@
     flex-shrink: 0;
 
     &:hover {
-      background: linear-gradient(135deg, #7f1d1d 0%, #450a0a 100%);
-      box-shadow: $shadow-lg;
+      background: rgba(20, 20, 20, 0.75);
     }
 
     &:active {
+      background: rgba(254, 210, 2, 0.12);
+      transform: translateY(1px);
     }
 
     @media (max-width: $tablet) {
@@ -227,9 +277,9 @@
 
   .btn-today {
     padding: $spacing-sm $spacing-xl;
-    background: rgba($dark-bg-elevated, 0.6);
-    color: $text-primary;
-    border: 1px solid $border-primary;
+    background: rgba(254, 210, 2, 0.05);
+    color: #fed202;
+    border: none;
     border-radius: $radius-full;
     cursor: pointer;
     font-size: $font-size-base;
@@ -238,9 +288,12 @@
     transition: all $transition-base;
 
     &:hover {
-      background: rgba($dark-bg-elevated, 0.9);
-      border-color: $accent-primary;
-      box-shadow: $shadow-glow;
+      background: rgba(254, 210, 2, 0.09);
+    }
+
+    &:active {
+      background: rgba(254, 210, 2, 0.12);
+      transform: translateY(1px);
     }
 
     @media (max-width: $tablet) {
@@ -304,8 +357,7 @@
 
   .day-quick-actions {
     display: flex;
-    gap: $spacing-xs;
-    flex-wrap: nowrap;
+    gap: 10px;
 
     .btn-sm {
       padding: $spacing-sm $spacing-md;
@@ -316,18 +368,19 @@
       min-width: auto;
       width: auto;
       border-radius: $radius-md;
-      background: $gradient-primary;
+      background: rgba(254, 210, 2, 0.05);
       border: none;
-      color: $text-primary;
-      box-shadow: $shadow-sm;
+      color: #fed202;
+      box-shadow: none;
       transition: all $transition-base;
 
       &:hover {
-        background: linear-gradient(135deg, #7f1d1d 0%, #450a0a 100%);
-        box-shadow: $shadow-md;
+        background: rgba(254, 210, 2, 0.09);
       }
 
       &:active {
+        background: rgba(254, 210, 2, 0.12);
+        transform: translateY(1px);
       }
     }
 
@@ -339,6 +392,7 @@
 
 .detail-item {
   padding: $spacing-md 0;
+  padding-top:0;
   border-bottom: 1px solid $border-secondary;
   display: flex;
   flex-direction: column;
@@ -356,7 +410,7 @@
   }
 
   span {
-    color: $text-secondary;
+    color: #fed202;
     font-size: $font-size-sm;
   }
 
@@ -556,7 +610,7 @@
 
   .month-day-indicator {
     font-size: 24px;
-    color: #00E676;
+    color: white;
     position: relative;
     z-index: 1;
 
@@ -590,22 +644,69 @@
   }
 
   &.selected {
-    background: linear-gradient(135deg, rgba(127, 29, 29, 0.3) 0%, rgba(69, 10, 10, 0.3) 100%);
-    border: 2px solid #7f1d1d;
-    box-shadow: 0 0 20px rgba(127, 29, 29, 0.5);
+    background: rgba(20, 20, 30, 0.8);
+    border: 2px solid #fed202;
+    //box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+    overflow: hidden;
 
+    // First layer - flowing gold mesh
     &::before {
-      opacity: 0.5;
+      content: '';
+      position: absolute;
+      top: -100%;
+      left: -100%;
+      width: 300%;
+      height: 300%;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.5) 0%, transparent 30%),
+        radial-gradient(circle at 80% 70%, rgba(218, 165, 32, 0.4) 0%, transparent 30%),
+        radial-gradient(circle at 50% 50%, rgba(255, 193, 37, 0.35) 0%, transparent 30%),
+        radial-gradient(circle at 70% 20%, rgba(205, 127, 50, 0.4) 0%, transparent 25%),
+        radial-gradient(circle at 30% 80%, rgba(255, 223, 128, 0.3) 0%, transparent 25%);
+      animation: gradientMeshFlow 6s ease-in-out infinite;
+      opacity: 1;
+      pointer-events: none;
+    }
+
+    // Second layer - gold shimmer particles
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(2px 2px at 20% 30%, rgba(255, 245, 214, 0.9), transparent),
+        radial-gradient(2px 2px at 60% 70%, rgba(255, 215, 0, 0.8), transparent),
+        radial-gradient(1px 1px at 50% 50%, rgba(218, 165, 32, 0.9), transparent),
+        radial-gradient(1px 1px at 80% 10%, rgba(255, 193, 37, 0.85), transparent),
+        radial-gradient(2px 2px at 90% 60%, rgba(244, 229, 194, 0.9), transparent),
+        radial-gradient(1px 1px at 15% 80%, rgba(205, 127, 50, 0.8), transparent),
+        radial-gradient(2px 2px at 40% 20%, rgba(255, 223, 128, 0.8), transparent),
+        radial-gradient(1px 1px at 65% 45%, rgba(255, 215, 0, 0.75), transparent);
+      background-size: 200% 200%;
+      background-position: 0% 0%;
+      animation: particleFloat 15s linear infinite;
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .month-day-number,
+    .month-day-indicator {
+      position: relative;
+      z-index: 2;
     }
 
     .month-day-number {
-      color: #ffffff;
+      color: #FFF4D6;
+      text-shadow:
+        0 0 15px rgba(255, 215, 0, 0.7),
+        0 0 25px rgba(218, 165, 32, 0.5),
+        0 2px 4px rgba(0, 0, 0, 0.3);
     }
   }
 
   &:active {
-    background: linear-gradient(135deg, rgba(127, 29, 29, 0.5) 0%, rgba(69, 10, 10, 0.5) 100%);
-    border-color: #991b1b;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
+    border-color: rgba(255, 255, 255, 0.5);
   }
 }
 
@@ -614,7 +715,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: $spacing-xl;
-  margin-top: $spacing-xl;
+  margin-top: 60px;
 
   @media (max-width: $tablet) {
     grid-template-columns: 1fr;
@@ -634,6 +735,9 @@
   flex-direction: column;
   gap: $spacing-md;
   height: 100%;
+  .btn-sm{
+    width: 100%;
+  }
 
   strong {
     font-size: $font-size-lg;
@@ -647,24 +751,27 @@
   }
 
   .btn {
-    align-self: flex-start;
-    padding: 8px 12px;
+    padding: 12px 16px;
     font-size: 14px;
-    font-weight: 600;
-    font-family: "JetBrains Mono", "Fira Code", "SF Mono", "Monaco", "Inconsolata", "Roboto Mono", "Courier New", monospace;
+    font-weight: 300;
+    font-family: $font-primary;
     white-space: nowrap;
     min-width: auto;
     width: auto;
     border-radius: 6px;
-    background: linear-gradient(135deg, #3f3f46 0%, #27272a 100%);
+    background: rgba(254, 210, 2, 0.02);
     border: none;
-    color: #f8fafc;
+    color: #fed202;
     box-shadow: none;
     transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
 
     &:hover {
-      background: linear-gradient(135deg, #7f1d1d 0%, #450a0a 100%);
-      box-shadow: none;
+      background: rgba(254, 210, 2, 0.09);
+    }
+
+    &:active {
+      background: rgba(254, 210, 2, 0.12);
+      transform: translateY(1px);
     }
   }
 }
@@ -681,11 +788,32 @@
 }
 
 // Steps value gradient
-.steps-value {
-  background: $text-gradient;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  font-weight: $font-weight-bold;
-  font-size: $font-size-lg;
+
+// Gradient Mesh Flow Animation
+@keyframes gradientMeshFlow {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+  33% {
+    transform: translate(-10%, -10%) rotate(5deg) scale(1.1);
+  }
+  66% {
+    transform: translate(10%, 10%) rotate(-5deg) scale(1.05);
+  }
 }
+
+// Particle Float Animation (falling stars effect)
+@keyframes particleFloat {
+  0% {
+    background-position: 0% 0%, 10% 10%, 20% 20%, 30% 30%, 40% 40%, 50% 50%, 60% 60%;
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    background-position: 100% 100%, 110% 110%, 120% 120%, 130% 130%, 140% 140%, 150% 150%, 160% 160%;
+    opacity: 0.4;
+  }
+}
+

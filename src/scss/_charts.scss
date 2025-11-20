@@ -93,54 +93,32 @@
 // Period Selector - Modern Tabs
 .period-selector {
   display: flex;
-  gap: $spacing-sm;
+  gap: 10px;
   margin-bottom: $spacing-xl;
   flex-wrap: wrap;
-  padding: $spacing-xs;
-  @include glass-card;
-  border-radius: $radius-lg;
 
   .period-btn {
     flex: 1;
     min-width: 100px;
-    padding: $spacing-md $spacing-lg;
+    padding: $spacing-sm $spacing-md;
     border: none;
-    background: transparent;
+    background: rgba(254, 210, 2, 0.05);
     border-radius: $radius-md;
     cursor: pointer;
     font-size: $font-size-sm;
     font-weight: $font-weight-semibold;
     font-family: $font-primary;
-    color: $text-secondary;
+    color: #fed202;
     transition: all $transition-base;
-    position: relative;
-
-    &::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: $gradient-card;
-      border-radius: $radius-md;
-      opacity: 0;
-      transition: opacity $transition-base;
-    }
+    box-shadow: none;
 
     &:hover {
-      color: $text-primary;
-
-      &::before {
-        opacity: 0.5;
-      }
+      background: rgba(254, 210, 2, 0.09);
     }
 
     &.active {
-      background: $gradient-primary;
-      color: $text-primary;
-      box-shadow: $shadow-md, $shadow-glow-purple;
-
-      &::before {
-        opacity: 0;
-      }
+      background: rgba(254, 210, 2, 0.15);
+      color: #fed202;
     }
   }
 }
