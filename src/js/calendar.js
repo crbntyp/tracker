@@ -102,6 +102,29 @@ function selectDay(dateStr) {
   }
 
   showDayDetails(dateStr);
+
+  // Scroll to selected day on mobile
+  scrollToSelectedDay();
+}
+
+// Scroll to selected day in week view (mobile)
+function scrollToSelectedDay() {
+  // Only on mobile/tablet and week view
+  if (viewMode !== 'week' || window.innerWidth > 768) return;
+
+  const container = document.getElementById('calendar-week');
+  const selectedDay = container?.querySelector('.calendar-day.selected');
+
+  if (!container || !selectedDay) return;
+
+  // Use setTimeout to ensure DOM has updated
+  setTimeout(() => {
+    selectedDay.scrollIntoView({
+      behavior: 'smooth',
+      block: 'nearest',
+      inline: 'center'
+    });
+  }, 100);
 }
 
 // Show day details
