@@ -15,9 +15,10 @@ if (session_status() === PHP_SESSION_NONE) {
 // Try multiple locations
 $envPaths = [
     __DIR__ . '/../.env.php',              // Docker: mounted to /var/www/html/.env.php
-    __DIR__ . '/../../.env.php',           // Production: root of tracker folder
+    __DIR__ . '/../../.env.php',           // Production: root of app folder
     $_SERVER['DOCUMENT_ROOT'] . '/.env.php',          // Absolute: server root
-    $_SERVER['DOCUMENT_ROOT'] . '/tracker/.env.php',  // Absolute: subfolder
+    $_SERVER['DOCUMENT_ROOT'] . '/trckr/.env.php',    // Absolute: subfolder (production)
+    $_SERVER['DOCUMENT_ROOT'] . '/tracker/.env.php',  // Absolute: subfolder (legacy)
 ];
 
 foreach ($envPaths as $envPath) {
@@ -36,10 +37,10 @@ define('DB_PASSWORD', getenv('DB_PASSWORD') ?: '');
 // Google OAuth configuration
 define('GOOGLE_CLIENT_ID', getenv('GOOGLE_CLIENT_ID') ?: '');
 define('GOOGLE_CLIENT_SECRET', getenv('GOOGLE_CLIENT_SECRET') ?: '');
-define('GOOGLE_REDIRECT_URI', getenv('GOOGLE_REDIRECT_URI') ?: 'https://www.carbontype.co/tracker/auth/google/callback');
+define('GOOGLE_REDIRECT_URI', getenv('GOOGLE_REDIRECT_URI') ?: 'https://www.crbntyp.com/trckr/auth/google/callback');
 
 // App configuration
-define('BASE_URL', getenv('BASE_URL') !== false ? getenv('BASE_URL') : '/tracker');
+define('BASE_URL', getenv('BASE_URL') !== false ? getenv('BASE_URL') : '/trckr');
 define('APP_ENV', getenv('APP_ENV') ?: 'production');
 
 // Session configuration
@@ -50,7 +51,7 @@ if (APP_ENV === 'production') {
 }
 
 // CORS headers for AJAX requests
-header('Access-Control-Allow-Origin: ' . (getenv('CLIENT_URL') ?: 'https://carbontype.co'));
+header('Access-Control-Allow-Origin: ' . (getenv('CLIENT_URL') ?: 'https://www.crbntyp.com'));
 header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');

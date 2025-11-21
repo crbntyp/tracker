@@ -1,8 +1,4 @@
 # Apache configuration for PRODUCTION
-# Copy this file to .htaccess on your live server
-# RewriteBase is set to /trckr/ for www.crbntyp.com/trckr/
-
-# Set directory index
 DirectoryIndex index.php index.html
 
 # Enable rewrite engine
@@ -28,21 +24,4 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^ index.php [L]
 
-# Security headers
-<IfModule mod_headers.c>
-    Header set X-Content-Type-Options "nosniff"
-    Header set X-Frame-Options "SAMEORIGIN"
-    Header set X-XSS-Protection "1; mode=block"
-</IfModule>
-
-# Disable directory browsing
 Options -Indexes
-
-# PHP settings for production
-<IfModule mod_php.c>
-    php_value upload_max_filesize 10M
-    php_value post_max_size 10M
-    php_value max_execution_time 300
-    php_flag display_errors Off
-    php_flag log_errors On
-</IfModule>
