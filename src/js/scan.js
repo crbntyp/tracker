@@ -315,7 +315,8 @@ async function migrateRecentItemsToDatabase() {
 // Add to recent items
 async function addToRecentItems(foodItem) {
   try {
-    await API.post(buildPath('/api/recent-foods'), {
+    console.log('Adding to recent items:', foodItem);
+    const response = await API.post(buildPath('/api/recent-foods'), {
       name: foodItem.name,
       brand: foodItem.brand,
       barcode: foodItem.barcode,
@@ -326,6 +327,7 @@ async function addToRecentItems(foodItem) {
       fat: foodItem.fat,
       sugar: foodItem.sugar
     });
+    console.log('Recent item added:', response);
   } catch (error) {
     console.error('Error saving to recent items:', error);
   }
@@ -336,9 +338,12 @@ async function loadRecentItems() {
   const listDiv = document.getElementById('saved-items-list');
 
   try {
+    console.log('Loading recent items...');
     const recentItems = await API.fetch(buildPath('/api/recent-foods'));
+    console.log('Recent items loaded:', recentItems);
 
     if (!recentItems || recentItems.length === 0) {
+      console.log('No recent items found');
       // Show 3 skeleton placeholders
       listDiv.innerHTML = `
         <div class="skeleton-item"></div>
