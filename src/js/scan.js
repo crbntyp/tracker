@@ -262,7 +262,7 @@ async function addFoodToMeal(date, mealType, product) {
   await saveEntry(date, entry);
 
   // Add to recent items (use base values per 100g)
-  addToRecentItems({
+  await addToRecentItems({
     name: foodItem.name,
     brand: foodItem.brand,
     barcode: foodItem.barcode,
