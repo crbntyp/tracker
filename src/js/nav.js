@@ -31,6 +31,7 @@ class Navigation {
           <span></span>
         </button>
         <div class="nav-links" id="nav-links">
+          <h2 class="mobile-logo">trckr<span>__</span></h2>
           <a href="${buildPath('/')}" class="nav-link ${currentPage.includes('calendar') || currentPage === buildPath('/') ? 'active' : ''}">
             <i class="las la-network-wired nav-icon"></i>
             <span class="nav-text">Dashboard</span>
@@ -81,6 +82,7 @@ class Navigation {
           <span></span>
         </button>
         <div class="nav-links" id="nav-links">
+          <h2 class="mobile-logo">trckr<span>__</span></h2>
           <a href="${buildPath('/')}" class="nav-link ${currentPage.includes('calendar') || currentPage === buildPath('/') ? 'active' : ''}">
             <i class="las la-network-wired nav-icon"></i>
             <span class="nav-text">Dashboard</span>

@@ -10,11 +10,7 @@
 .scan-container {
   display: grid;
   gap: $spacing-xl;
-
-  @media (min-width: $desktop) {
-    grid-template-columns: 1fr 1fr;
-    gap: $spacing-2xl;
-  }
+  grid-template-columns: 1fr;
 }
 
 // Scanner Section
@@ -129,6 +125,104 @@
       align-items: center;
       justify-content: center;
       gap: $spacing-sm;
+    }
+  }
+
+  .manual-divider {
+    display: flex;
+    align-items: center;
+    margin: $spacing-xl 0;
+    text-align: center;
+    color: $text-tertiary;
+    font-size: $font-size-xs;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+
+    &::before,
+    &::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid $border-secondary;
+    }
+
+    span {
+      padding: 0 $spacing-md;
+    }
+  }
+
+  .manual-entry-form {
+    display: grid;
+    gap: $spacing-md;
+    grid-template-columns: 1fr;
+
+    // Food name on its own row (direct child only)
+    > input:first-child {
+      grid-column: 1 / -1;
+      background: rgba($dark-bg-elevated, 0.6);
+      border: 1px solid $border-primary;
+      color: $text-primary;
+      padding: $spacing-md $spacing-lg;
+      border-radius: $radius-sm;
+      font-family: $font-primary;
+      font-size: $font-size-base;
+      transition: all $transition-base;
+
+      &:focus {
+        outline: none;
+        border-color: #fed202;
+        background: rgba($dark-bg-elevated, 0.8);
+      }
+
+      &::placeholder {
+        color: $text-tertiary;
+        font-size: $font-size-sm;
+      }
+    }
+
+    // Container for nutrition inputs
+    .nutrition-inputs {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: $spacing-md;
+
+      @media (max-width: $tablet) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      @media (max-width: 480px) {
+        grid-template-columns: 1fr;
+      }
+
+      input {
+        background: rgba($dark-bg-elevated, 0.6);
+        border: 1px solid $border-primary;
+        color: $text-primary;
+        padding: $spacing-md;
+        border-radius: $radius-sm;
+        font-family: $font-primary;
+        font-size: $font-size-sm;
+        transition: all $transition-base;
+        text-align: center;
+
+        &:focus {
+          outline: none;
+          border-color: #fed202;
+          background: rgba($dark-bg-elevated, 0.8);
+        }
+
+        &::placeholder {
+          color: $text-tertiary;
+          font-size: $font-size-xs;
+        }
+      }
+    }
+
+    input {
+      width: 100%;
+    }
+
+    button {
+      white-space: nowrap;
     }
   }
 }
@@ -276,43 +370,92 @@
 
 // Saved Items Section
 .saved-items {
-  @include glass-card;
-  padding: $spacing-xl;
-  border-radius: $radius-lg;
-  grid-column: 1 / -1;
+  margin-top: $spacing-xl;
+  padding-top: $spacing-xl;
+  border-top: 1px solid $border-secondary;
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: $spacing-xl;
+  align-items: center;
+
+  @media (max-width: $tablet) {
+    grid-template-columns: 1fr;
+    gap: $spacing-md;
+    align-items: start;
+  }
 
   h3 {
     font-size: 18px;
     font-weight: $font-weight-bold;
     color: #ffffff;
-    margin-bottom: $spacing-lg;
     text-transform: none;
     letter-spacing: normal;
   }
 }
 
-// Saved Items List
+// Saved Items List - Horizontal Scroll
 .saved-items-list {
-  display: grid;
+  display: flex;
   gap: $spacing-md;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: $spacing-md;
+  -webkit-overflow-scrolling: touch;
 
-  @media (min-width: $tablet) {
-    grid-template-columns: repeat(2, 1fr);
+  // Custom scrollbar
+  &::-webkit-scrollbar {
+    height: 6px;
   }
 
-  @media (min-width: $desktop) {
-    grid-template-columns: repeat(3, 1fr);
+  &::-webkit-scrollbar-track {
+    background: rgba($dark-bg-primary, 0.5);
+    border-radius: $radius-sm;
   }
 
-  // Empty state
-  p {
-    grid-column: 1 / -1;
-    text-align: center;
-    color: $text-muted;
-    font-size: $font-size-sm;
-    padding: $spacing-xl 0;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+  &::-webkit-scrollbar-thumb {
+    background: $border-primary;
+    border-radius: $radius-sm;
+
+    &:hover {
+      background: #fed202;
+    }
+  }
+
+  // Empty state with skeleton placeholders
+  &:empty::before {
+    content: '';
+    display: flex;
+    gap: $spacing-md;
+  }
+}
+
+// Skeleton placeholders for empty state
+.saved-items-list:empty {
+  &::after {
+    content: '';
+    display: flex;
+    gap: $spacing-md;
+  }
+}
+
+// Add skeleton items via JavaScript or show by default
+.skeleton-item {
+  background: rgba($dark-bg-elevated, 0.2);
+  border: 1px dashed rgba($border-secondary, 0.3);
+  padding: $spacing-lg;
+  border-radius: $radius-md;
+  height: 80px;
+  flex: 1;
+  min-width: 200px;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.2;
   }
 }
 
@@ -328,6 +471,8 @@
   gap: $spacing-md;
   cursor: pointer;
   transition: all $transition-base;
+  min-width: 280px;
+  flex-shrink: 0;
 
   &:hover {
     border-color: #fed202;

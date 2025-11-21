@@ -150,6 +150,7 @@ function showDayDetails(dateStr) {
         <button class="btn btn-sm" onclick="openModalForDateGym('${dateStr}', ${entry.gym})"><i class="las ${entry.gym ? 'la-edit' : 'la-plus'}"></i> Gym/Walks</button>
         <button class="btn btn-sm" onclick="openModalForDateSupplements('${dateStr}')"><i class="las ${entry.supplements ? 'la-edit' : 'la-plus'}"></i> Supplements</button>
         <button class="btn btn-sm" onclick="openModalForDateSteps('${dateStr}')"><i class="las ${entry.steps ? 'la-edit' : 'la-plus'}"></i> Steps</button>
+        <button class="btn btn-sm" onclick="window.location.href='${buildPath('/scan.html')}'"><i class="las ${hasMeals ? 'la-utensils' : 'la-plus'}"></i> Nutrition</button>
       </div>
     </div>
 
@@ -187,26 +188,9 @@ function showDayDetails(dateStr) {
         </div>
 
         <!-- Nutrition Totals -->
-        <div class="detail-item${hasMeals ? '' : ' empty'}" style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+        <div class="detail-item${hasMeals ? '' : ' empty'}">
           <strong>Daily Nutrition:</strong>
-          ${hasMeals ? `
-            <div style="margin-top: 10px;">
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 14px;">
-                <div>Calories: <strong>${Math.round(nutritionTotals.calories)} kcal</strong></div>
-                <div>Protein: <strong>${Math.round(nutritionTotals.protein)}g</strong></div>
-                <div>Carbs: <strong>${Math.round(nutritionTotals.carbs)}g</strong></div>
-                <div>Fat: <strong>${Math.round(nutritionTotals.fat)}g</strong></div>
-              </div>
-              <button class="btn btn-sm" onclick="window.location.href='${buildPath('/scan.html')}'" style="margin-top: 10px;">
-                <i class="las la-utensils"></i> View Meals
-              </button>
-            </div>
-          ` : `
-            <span>No meals logged</span>
-            <button class="btn btn-sm" onclick="window.location.href='${buildPath('/scan.html')}'" style="margin-top: 10px;">
-              <i class="las la-plus"></i> Add Food
-            </button>
-          `}
+          <span>${hasMeals ? `${Math.round(nutritionTotals.calories)} kcal • ${Math.round(nutritionTotals.protein)}g protein • ${Math.round(nutritionTotals.carbs)}g carbs • ${Math.round(nutritionTotals.fat)}g fat` : 'No meals logged'}</span>
         </div>
       </div>
 

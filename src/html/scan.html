@@ -48,6 +48,16 @@
               <i class="las la-stop"></i> Stop Camera
             </button>
           </div>
+
+          <!-- Recent Items - horizontal scroll -->
+          <div class="saved-items">
+            <h3>Recent Items</h3>
+            <div id="saved-items-list" class="saved-items-list">
+              <div class="skeleton-item"></div>
+              <div class="skeleton-item"></div>
+              <div class="skeleton-item"></div>
+            </div>
+          </div>
         </div>
 
         <!-- Manual Search -->
@@ -59,20 +69,30 @@
               <i class="las la-search"></i> Search
             </button>
           </div>
+
+          <div class="manual-divider">
+            <span>or enter manually</span>
+          </div>
+
+          <div class="manual-entry-form">
+            <input type="text" id="manual-name" placeholder="Food name" />
+            <div class="nutrition-inputs">
+              <input type="number" id="manual-entry-calories" placeholder="Calories" step="0.1" />
+              <input type="number" id="manual-entry-protein" placeholder="Protein (g)" step="0.1" />
+              <input type="number" id="manual-entry-carbs" placeholder="Carbs (g)" step="0.1" />
+              <input type="number" id="manual-entry-fat" placeholder="Fat (g)" step="0.1" />
+              <input type="number" id="manual-entry-sugar" placeholder="Sugar (g)" step="0.1" />
+            </div>
+            <button class="btn btn-primary" onclick="addManualEntry()">
+              <i class="las la-plus"></i> Add
+            </button>
+          </div>
         </div>
 
         <!-- Scan Results -->
         <div class="scan-results" id="scan-results" style="display: none;">
           <h3>Scan Results</h3>
           <div id="food-details"></div>
-        </div>
-
-        <!-- Saved Items -->
-        <div class="saved-items">
-          <h3>Recent Items</h3>
-          <div id="saved-items-list" class="saved-items-list">
-            <p>No recent items</p>
-          </div>
         </div>
       </div>
     </div>

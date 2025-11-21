@@ -85,6 +85,20 @@ function copyDir(src, dest) {
 function handleChange(filePath) {
   const relativePath = path.relative(SRC_DIR, filePath);
 
+  // Handle SCSS files
+  if (filePath.includes('/scss/')) {
+    log(`Compiling SCSS...`, 'blue');
+    try {
+      execSync('npx sass src/scss/styles.scss:dist/css/styles.css --no-source-map', { stdio: 'ignore' });
+      log(`✓ SCSS compiled`, 'green');
+      // Reload CSS only
+      browserSync.reload('*.css');
+    } catch (error) {
+      log(`SCSS compilation failed: ${error.message}`, 'red');
+    }
+    return;
+  }
+
   // Determine destination path
   let destPath;
 
@@ -96,9 +110,6 @@ function handleChange(filePath) {
     // Static files go to dist root
     const fileName = path.basename(filePath);
     destPath = path.join(DIST_DIR, fileName);
-  } else if (filePath.includes('/scss/')) {
-    // SCSS files trigger recompilation (handled separately)
-    return;
   } else {
     // Other files maintain their structure (api, auth, includes, js)
     destPath = path.join(DIST_DIR, relativePath);
@@ -176,8 +187,7 @@ log(`Watching directory: ${SRC_DIR}`, 'cyan');
 const fileWatcher = chokidar.watch(SRC_DIR, {
   ignored: [
     /(^|[\/\\])\../,  // ignore dotfiles
-    '**/node_modules/**',  // ignore node_modules
-    '**/*.scss'  // SCSS handled separately
+    '**/node_modules/**'  // ignore node_modules
   ],
   persistent: true,
   ignoreInitial: true,
@@ -202,42 +212,9 @@ fileWatcher
     log('[WATCHER] Ready and watching files', 'green');
   });
 
-// Use Sass built-in watch for better partial file detection
-log('🎨 Starting Sass watcher...', 'blue');
-const sassProcess = require('child_process').spawn(
-  'sass',
-  ['--watch', 'src/scss/styles.scss:dist/css/styles.css', '--no-source-map'],
-  { stdio: ['ignore', 'pipe', 'pipe'] }
-);
-
-// Log sass compilation events
-sassProcess.stdout.on('data', (data) => {
-  const output = data.toString().trim();
-  if (output.includes('Compiled')) {
-    log('✓ SCSS compiled', 'green');
-    // Restart Docker web container to prevent 403 errors
-    restartDockerWeb();
-  }
-});
-
-sassProcess.stderr.on('data', (data) => {
-  const error = data.toString().trim();
-  // Ignore deprecation warnings
-  if (!error.includes('DEPRECATION') && !error.includes('WARNING')) {
-    log(`SCSS error: ${error}`, 'red');
-  }
-});
-
-log('✓ Sass watcher started', 'green');
-
 // Keep process alive and handle cleanup
 process.on('SIGINT', () => {
   log('\n👋 Stopping watch mode...', 'yellow');
-
-  // Kill sass watcher
-  if (sassProcess) {
-    sassProcess.kill();
-  }
 
   // Stop browser-sync
   browserSync.exit();

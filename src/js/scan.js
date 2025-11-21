@@ -239,7 +239,12 @@ function loadRecentItems() {
   const listDiv = document.getElementById('saved-items-list');
 
   if (recentItems.length === 0) {
-    listDiv.innerHTML = '<p style="color: #999; text-align: center;">No recent items</p>';
+    // Show 3 skeleton placeholders
+    listDiv.innerHTML = `
+      <div class="skeleton-item"></div>
+      <div class="skeleton-item"></div>
+      <div class="skeleton-item"></div>
+    `;
     return;
   }
 
@@ -308,6 +313,47 @@ function getDailyNutritionTotals(date) {
   });
 
   return totals;
+}
+
+// Add manual entry (when user enters food data manually)
+function addManualEntry() {
+  const name = document.getElementById('manual-name').value.trim();
+  const calories = parseFloat(document.getElementById('manual-entry-calories').value) || 0;
+  const protein = parseFloat(document.getElementById('manual-entry-protein').value) || 0;
+  const carbs = parseFloat(document.getElementById('manual-entry-carbs').value) || 0;
+  const fat = parseFloat(document.getElementById('manual-entry-fat').value) || 0;
+  const sugar = parseFloat(document.getElementById('manual-entry-sugar').value) || 0;
+
+  if (!name) {
+    alert('Please enter a food name');
+    return;
+  }
+
+  // Create a product object compatible with the rest of the app
+  currentProduct = {
+    product_name: name,
+    brands: 'Manual Entry',
+    code: 'manual-' + Date.now(),
+    image_url: '',
+    nutriments: {
+      'energy-kcal_100g': calories,
+      'proteins_100g': protein,
+      'carbohydrates_100g': carbs,
+      'fat_100g': fat,
+      'sugars_100g': sugar
+    }
+  };
+
+  // Clear the form
+  document.getElementById('manual-name').value = '';
+  document.getElementById('manual-entry-calories').value = '';
+  document.getElementById('manual-entry-protein').value = '';
+  document.getElementById('manual-entry-carbs').value = '';
+  document.getElementById('manual-entry-fat').value = '';
+  document.getElementById('manual-entry-sugar').value = '';
+
+  // Open meal selection modal
+  openAddToMealModal();
 }
 
 // Open manual nutrition entry modal
