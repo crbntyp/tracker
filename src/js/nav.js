@@ -30,6 +30,10 @@ class Navigation {
             <i class="las la-network-wired nav-icon"></i>
             <span class="nav-text">Dashboard</span>
           </a>
+          <a href="${buildPath('/scan.html')}" class="nav-link ${currentPage.includes('scan') ? 'active' : ''}">
+            <i class="las la-barcode nav-icon"></i>
+            <span class="nav-text">Scan</span>
+          </a>
           <a href="${buildPath('/charts.html')}" class="nav-link ${currentPage.includes('charts') ? 'active' : ''}">
             <i class="las la-chart-pie nav-icon"></i>
             <span class="nav-text">Stats</span>
@@ -68,6 +72,10 @@ class Navigation {
           <a href="${buildPath('/')}" class="nav-link ${currentPage.includes('calendar') || currentPage === buildPath('/') ? 'active' : ''}">
             <i class="las la-network-wired nav-icon"></i>
             <span class="nav-text">Dashboard</span>
+          </a>
+          <a href="${buildPath('/scan.html')}" class="nav-link ${currentPage.includes('scan') ? 'active' : ''}">
+            <i class="las la-barcode nav-icon"></i>
+            <span class="nav-text">Scan</span>
           </a>
           <a href="${buildPath('/charts.html')}" class="nav-link ${currentPage.includes('charts') ? 'active' : ''}">
             <i class="las la-chart-pie nav-icon"></i>

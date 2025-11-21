@@ -135,6 +135,10 @@ function showDayDetails(dateStr) {
   const entry = getEntry(dateStr);
   const dateFormatted = formatDateLong(dateStr);
 
+  // Calculate nutrition totals
+  const nutritionTotals = calculateDailyNutritionTotals(dateStr);
+  const hasMeals = entry.meals && Object.values(entry.meals).some(mealItems => mealItems.length > 0);
+
   let html = `
     <div class="day-details-header">
       <h3>${dateFormatted}</h3>
@@ -181,6 +185,29 @@ function showDayDetails(dateStr) {
           <strong>Steps:</strong>
           <span class="${entry.steps ? 'steps-value' : ''}">${entry.steps ? entry.steps.toLocaleString() : 'Not logged'}</span>
         </div>
+
+        <!-- Nutrition Totals -->
+        <div class="detail-item${hasMeals ? '' : ' empty'}" style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+          <strong>Daily Nutrition:</strong>
+          ${hasMeals ? `
+            <div style="margin-top: 10px;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 14px;">
+                <div>Calories: <strong>${Math.round(nutritionTotals.calories)} kcal</strong></div>
+                <div>Protein: <strong>${Math.round(nutritionTotals.protein)}g</strong></div>
+                <div>Carbs: <strong>${Math.round(nutritionTotals.carbs)}g</strong></div>
+                <div>Fat: <strong>${Math.round(nutritionTotals.fat)}g</strong></div>
+              </div>
+              <button class="btn btn-sm" onclick="window.location.href='${buildPath('/scan.html')}'" style="margin-top: 10px;">
+                <i class="las la-utensils"></i> View Meals
+              </button>
+            </div>
+          ` : `
+            <span>No meals logged</span>
+            <button class="btn btn-sm" onclick="window.location.href='${buildPath('/scan.html')}'" style="margin-top: 10px;">
+              <i class="las la-plus"></i> Add Food
+            </button>
+          `}
+        </div>
       </div>
 
       <div class="day-details-right">
@@ -199,6 +226,42 @@ function showDayDetails(dateStr) {
 
   // Remove fade-in class after animation completes to allow re-triggering
   setTimeout(() => detailsEl.classList.remove('fade-in'), 300);
+}
+
+// Calculate daily nutrition totals
+function calculateDailyNutritionTotals(date) {
+  const entry = getEntry(date);
+
+  if (!entry.meals) {
+    return {
+      calories: 0,
+      protein: 0,
+      carbs: 0,
+      fat: 0,
+      sugar: 0
+    };
+  }
+
+  let totals = {
+    calories: 0,
+    protein: 0,
+    carbs: 0,
+    fat: 0,
+    sugar: 0
+  };
+
+  // Sum up all meals
+  Object.values(entry.meals).forEach(mealItems => {
+    mealItems.forEach(item => {
+      totals.calories += item.calories || 0;
+      totals.protein += item.protein || 0;
+      totals.carbs += item.carbs || 0;
+      totals.fat += item.fat || 0;
+      totals.sugar += item.sugar || 0;
+    });
+  });
+
+  return totals;
 }
 
 // Save diary entry
