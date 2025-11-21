@@ -19,164 +19,11 @@
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
   <link rel="stylesheet" href="css/styles.css">
-  <style>
-    .scan-container {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .scan-section {
-      background: var(--dark-bg-elevated);
-      padding: 20px;
-      border-radius: 8px;
-    }
-
-    #scanner-container {
-      width: 100%;
-      max-width: 600px;
-      margin: 0 auto;
-      border-radius: 8px;
-      overflow: hidden;
-    }
-
-    .scanner-controls {
-      display: flex;
-      gap: 10px;
-      margin-top: 15px;
-      justify-content: center;
-    }
-
-    .scan-results {
-      background: var(--dark-bg-elevated);
-      padding: 20px;
-      border-radius: 8px;
-    }
-
-    .food-card {
-      background: var(--dark-bg);
-      padding: 20px;
-      border-radius: 8px;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
-
-    .food-card img {
-      max-width: 200px;
-      border-radius: 4px;
-      align-self: center;
-    }
-
-    .food-card h4 {
-      margin: 0;
-      color: var(--accent-color);
-    }
-
-    .food-card ul {
-      list-style: none;
-      padding: 0;
-      margin: 10px 0;
-    }
-
-    .food-card li {
-      padding: 5px 0;
-      border-bottom: 1px solid var(--dark-bg-elevated);
-    }
-
-    .manual-search {
-      background: var(--dark-bg-elevated);
-      padding: 20px;
-      border-radius: 8px;
-    }
-
-    .manual-search .form-group {
-      display: flex;
-      gap: 10px;
-    }
-
-    .manual-search input {
-      flex: 1;
-    }
-
-    .saved-items {
-      background: var(--dark-bg-elevated);
-      padding: 20px;
-      border-radius: 8px;
-    }
-
-    .saved-items-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 15px;
-    }
-
-    .saved-item {
-      background: var(--dark-bg);
-      padding: 15px;
-      border-radius: 4px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .saved-item:hover {
-      background: rgba(255, 255, 255, 0.05);
-    }
-
-    .saved-item-info {
-      flex: 1;
-    }
-
-    .saved-item-name {
-      font-weight: 600;
-      color: white;
-    }
-
-    .saved-item-macros {
-      font-size: 14px;
-      color: #999;
-      margin-top: 5px;
-    }
-
-    .meal-selection {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 15px;
-    }
-
-    .meal-button {
-      flex: 1;
-      min-width: 120px;
-      padding: 15px;
-      background: var(--dark-bg);
-      border: 2px solid var(--accent-color);
-      color: white;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.2s;
-      font-family: 'Geist Mono', monospace;
-      font-weight: 600;
-    }
-
-    .meal-button:hover {
-      background: var(--accent-color);
-      transform: translateY(-2px);
-    }
-
-    .meal-button.selected {
-      background: var(--accent-color);
-    }
-  </style>
 </head>
 <body>
   <nav id="main-nav"></nav>
 
-  <div class="container">
+  <div class="container scan-page">
     <div class="page-header">
       <h2>Scan Food</h2>
       <p class="subtitle">Scan barcodes to track nutrition</p>
@@ -187,12 +34,17 @@
         <!-- Camera Scanner -->
         <div class="scan-section">
           <h3>Camera Scanner</h3>
-          <div id="scanner-container"></div>
+          <div id="scanner-container">
+            <div class="scanner-placeholder">
+              <i class="las la-barcode"></i>
+              <p>Ready to scan</p>
+            </div>
+          </div>
           <div class="scanner-controls">
-            <button class="btn-primary" id="start-scan-btn" onclick="startScanner()">
+            <button class="btn btn-primary" id="start-scan-btn" onclick="startScanner()">
               <i class="las la-camera"></i> Start Camera
             </button>
-            <button class="btn-secondary" id="stop-scan-btn" onclick="stopScanner()" style="display: none;">
+            <button class="btn btn-secondary" id="stop-scan-btn" onclick="stopScanner()" style="display: none;">
               <i class="las la-stop"></i> Stop Camera
             </button>
           </div>
@@ -203,7 +55,9 @@
           <h3>Manual Search</h3>
           <div class="form-group">
             <input type="text" id="barcode-input" placeholder="Enter barcode manually" />
-            <button class="btn-primary" onclick="searchBarcode()">Search</button>
+            <button class="btn btn-primary" onclick="searchBarcode()">
+              <i class="las la-search"></i> Search
+            </button>
           </div>
         </div>
 
@@ -217,7 +71,7 @@
         <div class="saved-items">
           <h3>Recent Items</h3>
           <div id="saved-items-list" class="saved-items-list">
-            <p style="color: #999; text-align: center;">No recent items</p>
+            <p>No recent items</p>
           </div>
         </div>
       </div>
@@ -233,28 +87,77 @@
       <div class="modal-body">
         <p id="modal-product-name" style="color: #999; margin-bottom: 20px;"></p>
 
-        <label><strong>Select Date:</strong></label>
-        <input type="date" id="meal-date" class="form-control" style="width: 100%; margin-bottom: 20px;" />
+        <div class="form-group">
+          <label>Select Date</label>
+          <input type="date" id="meal-date" />
+        </div>
 
-        <label><strong>Select Meal:</strong></label>
+        <label style="display: block; margin-bottom: 12px; font-weight: 600; font-size: 14px; color: #cbd5e1; text-transform: uppercase; letter-spacing: 0.05em;">Select Meal</label>
         <div class="meal-selection">
           <button class="meal-button" data-meal="breakfast">
-            <i class="las la-sun"></i><br>Breakfast
+            <i class="las la-sun"></i>
+            <span>Breakfast</span>
           </button>
           <button class="meal-button" data-meal="lunch">
-            <i class="las la-cloud-sun"></i><br>Lunch
+            <i class="las la-cloud-sun"></i>
+            <span>Lunch</span>
           </button>
           <button class="meal-button" data-meal="dinner">
-            <i class="las la-moon"></i><br>Dinner
+            <i class="las la-moon"></i>
+            <span>Dinner</span>
           </button>
           <button class="meal-button" data-meal="snacks">
-            <i class="las la-cookie"></i><br>Snacks
+            <i class="las la-cookie"></i>
+            <span>Snacks</span>
           </button>
         </div>
       </div>
       <div class="modal-actions">
         <button type="button" class="btn-primary" onclick="confirmAddToMeal()">Add</button>
         <button type="button" class="btn-secondary" data-close="addToMealModal">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Manual Nutrition Entry Modal -->
+  <div class="modal" id="manualNutritionModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Enter Nutrition Info</h2>
+      </div>
+      <div class="modal-body">
+        <p style="color: #94a3b8; margin-bottom: 20px; font-size: 14px;">
+          Nutrition data is missing or incomplete. Please enter manually (per 100g):
+        </p>
+
+        <div class="form-group">
+          <label for="manual-calories">Calories (kcal)</label>
+          <input type="number" id="manual-calories" step="0.1" min="0" placeholder="0" />
+        </div>
+
+        <div class="form-group">
+          <label for="manual-protein">Protein (g)</label>
+          <input type="number" id="manual-protein" step="0.1" min="0" placeholder="0" />
+        </div>
+
+        <div class="form-group">
+          <label for="manual-carbs">Carbs (g)</label>
+          <input type="number" id="manual-carbs" step="0.1" min="0" placeholder="0" />
+        </div>
+
+        <div class="form-group">
+          <label for="manual-fat">Fat (g)</label>
+          <input type="number" id="manual-fat" step="0.1" min="0" placeholder="0" />
+        </div>
+
+        <div class="form-group">
+          <label for="manual-sugar">Sugar (g)</label>
+          <input type="number" id="manual-sugar" step="0.1" min="0" placeholder="0" />
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-primary" onclick="saveManualNutrition()">Save & Continue</button>
+        <button type="button" class="btn-secondary" data-close="manualNutritionModal">Cancel</button>
       </div>
     </div>
   </div>

@@ -94,24 +94,43 @@ function displayFoodDetails(product) {
   const fat = nutriments.fat_100g || 0;
   const sugar = nutriments.sugars_100g || 0;
 
+  // Check if nutrition data is missing or all zeros
+  const hasNutritionData = calories > 0 || protein > 0 || carbs > 0 || fat > 0;
+
   detailsDiv.innerHTML = `
     <div class="food-card">
       ${product.image_url ? `<img src="${product.image_url}" alt="${product.product_name}">` : ''}
-      <h4>${product.product_name || 'Unknown Product'}</h4>
-      <p><strong>Brand:</strong> ${product.brands || 'Unknown'}</p>
+      <div>
+        <h4>${product.product_name || 'Unknown Product'}</h4>
+        <p><strong>Brand:</strong> ${product.brands || 'Unknown'}</p>
 
-      <h5>Nutrition (per 100g):</h5>
-      <ul>
-        <li>Calories: ${calories} kcal</li>
-        <li>Protein: ${protein} g</li>
-        <li>Carbs: ${carbs} g</li>
-        <li>Fat: ${fat} g</li>
-        <li>Sugars: ${sugar} g</li>
-      </ul>
+        <h5>Nutrition (per 100g):</h5>
+        <ul>
+          <li>Calories <strong>${calories} kcal</strong></li>
+          <li>Protein <strong>${protein}g</strong></li>
+          <li>Carbs <strong>${carbs}g</strong></li>
+          <li>Fat <strong>${fat}g</strong></li>
+          <li>Sugars <strong>${sugar}g</strong></li>
+        </ul>
 
-      <button class="btn-primary" onclick="openAddToMealModal()">
-        <i class="las la-plus"></i> Add to Meal
-      </button>
+        ${!hasNutritionData ? `
+          <div class="nutrition-warning">
+            <i class="las la-exclamation-triangle"></i>
+            <span>Nutrition data is missing or incomplete</span>
+          </div>
+        ` : ''}
+
+        <div class="food-card-actions">
+          ${!hasNutritionData ? `
+            <button class="btn btn-secondary" onclick="openManualNutritionModal()">
+              <i class="las la-edit"></i> Enter Manually
+            </button>
+          ` : ''}
+          <button class="btn btn-primary" onclick="openAddToMealModal()">
+            <i class="las la-plus"></i> Add to Meal
+          </button>
+        </div>
+      </div>
     </div>
   `;
 
@@ -191,7 +210,8 @@ async function addFoodToMeal(date, mealType, product) {
 
   entry.meals[mealType].push(foodItem);
 
-  await saveData();
+  // Save entry to database
+  await saveEntry(date, entry);
 
   // Add to recent items
   addToRecentItems(foodItem);
@@ -288,4 +308,48 @@ function getDailyNutritionTotals(date) {
   });
 
   return totals;
+}
+
+// Open manual nutrition entry modal
+function openManualNutritionModal() {
+  if (!currentProduct) return;
+
+  // Pre-fill with existing values if any
+  const nutriments = currentProduct.nutriments || {};
+
+  document.getElementById('manual-calories').value = nutriments['energy-kcal_100g'] || '';
+  document.getElementById('manual-protein').value = nutriments.proteins_100g || '';
+  document.getElementById('manual-carbs').value = nutriments.carbohydrates_100g || '';
+  document.getElementById('manual-fat').value = nutriments.fat_100g || '';
+  document.getElementById('manual-sugar').value = nutriments.sugars_100g || '';
+
+  openModal('manualNutritionModal');
+}
+
+// Save manual nutrition data
+function saveManualNutrition() {
+  if (!currentProduct) return;
+
+  const calories = parseFloat(document.getElementById('manual-calories').value) || 0;
+  const protein = parseFloat(document.getElementById('manual-protein').value) || 0;
+  const carbs = parseFloat(document.getElementById('manual-carbs').value) || 0;
+  const fat = parseFloat(document.getElementById('manual-fat').value) || 0;
+  const sugar = parseFloat(document.getElementById('manual-sugar').value) || 0;
+
+  // Update product with manual nutrition data
+  if (!currentProduct.nutriments) {
+    currentProduct.nutriments = {};
+  }
+
+  currentProduct.nutriments['energy-kcal_100g'] = calories;
+  currentProduct.nutriments.proteins_100g = protein;
+  currentProduct.nutriments.carbohydrates_100g = carbs;
+  currentProduct.nutriments.fat_100g = fat;
+  currentProduct.nutriments.sugars_100g = sugar;
+
+  // Close modal and refresh display
+  closeModal('manualNutritionModal');
+  displayFoodDetails(currentProduct);
+
+  showNotification('Nutrition data updated!');
 }

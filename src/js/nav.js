@@ -25,7 +25,12 @@ class Navigation {
 
     nav.innerHTML = `
       <div class="nav-container fade-in">
-        <div class="nav-links">
+        <button class="nav-hamburger" id="nav-hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <div class="nav-links" id="nav-links">
           <a href="${buildPath('/')}" class="nav-link ${currentPage.includes('calendar') || currentPage === buildPath('/') ? 'active' : ''}">
             <i class="las la-network-wired nav-icon"></i>
             <span class="nav-text">Dashboard</span>
@@ -47,6 +52,8 @@ class Navigation {
         </div>
       </div>
     `;
+
+    this.initHamburger();
   }
 
   async loadUser() {
@@ -68,7 +75,12 @@ class Navigation {
 
     nav.innerHTML = `
       <div class="nav-container fade-in">
-        <div class="nav-links">
+        <button class="nav-hamburger" id="nav-hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <div class="nav-links" id="nav-links">
           <a href="${buildPath('/')}" class="nav-link ${currentPage.includes('calendar') || currentPage === buildPath('/') ? 'active' : ''}">
             <i class="las la-network-wired nav-icon"></i>
             <span class="nav-text">Dashboard</span>
@@ -95,6 +107,48 @@ class Navigation {
         </div>
       </div>
     `;
+
+    this.initHamburger();
+  }
+
+  initHamburger() {
+    const hamburger = document.getElementById('nav-hamburger');
+    const navLinks = document.getElementById('nav-links');
+
+    if (!hamburger || !navLinks) return;
+
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('active');
+      navLinks.classList.toggle('active');
+
+      // Prevent body scroll when menu is open
+      if (navLinks.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+      }
+    });
+
+    // Close menu when clicking a nav link
+    const links = navLinks.querySelectorAll('.nav-link');
+    links.forEach(link => {
+      link.addEventListener('click', () => {
+        hamburger.classList.remove('active');
+        navLinks.classList.remove('active');
+        document.body.style.overflow = '';
+      });
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (navLinks.classList.contains('active') &&
+          !navLinks.contains(e.target) &&
+          !hamburger.contains(e.target)) {
+        hamburger.classList.remove('active');
+        navLinks.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    });
   }
 }
 
