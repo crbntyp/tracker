@@ -129,8 +129,11 @@
         // Auto-detect base path for Google OAuth
         document.getElementById('googleLoginBtn').addEventListener('click', function(e) {
           e.preventDefault();
-          // Check if we're in /tracker/ subfolder or at root
-          const basePath = window.location.pathname.includes('/tracker/') ? '/tracker' : '';
+          // Check if we're in a subfolder or at root
+          const path = window.location.pathname;
+          let basePath = '';
+          if (path.includes('/trckr/')) basePath = '/trckr';
+          else if (path.includes('/tracker/')) basePath = '/tracker';
           window.location.href = basePath + '/auth/google';
         });
       </script>
