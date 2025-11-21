@@ -1,7 +1,8 @@
 <div align="center">
   <img src="src/static/favicon.png" alt="trckr__ logo" height="100">
 
-  A dark-themed fitness tracking application with Google OAuth authentication. Track your weight, gym attendance, supplements, steps, and daily diary entries.
+
+  Fitness tracking application with Google OAuth authentication. Track your weight, activity (walks, gym), supplements, steps, and daily diary entries.
 </div>
 
 ## Screenshots
@@ -15,15 +16,13 @@
 ## Features
 
 - 📊 **Weight Tracking** - Log daily weight with time stamps
-- 🏋️ **Gym Attendance** - Track workout days
+- 🏋️ **Activity** - Did you manage to get off your arse today ^^
 - 💊 **Supplements** - Record daily supplement intake
 - 🚶 **Step Counter** - Log daily steps
 - 📝 **Daily Diary** - Keep journal entries for each day
 - 📅 **Calendar Views** - Week and month view with visual indicators
-- 📈 **Charts** - Visualize your progress over time
+- 📈 **Charts** - Visualise your progress over time
 - 🔐 **Google OAuth** - Secure authentication
-- 🎨 **Dark Theme** - Modern muscle car-inspired design
-- 📱 **Mobile Responsive** - Works on all devices
 
 ## Tech Stack
 

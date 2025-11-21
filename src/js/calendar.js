@@ -165,19 +165,19 @@ function showDayDetails(dateStr) {
         `}
 
         <!-- Gym -->
-        <div class="detail-item">
+        <div class="detail-item${entry.gym ? '' : ' empty'}">
           <strong>Gym or 3k+ walks:</strong>
           <span>${entry.gym ? '✓ Yes' : '✗ No'}</span>
         </div>
 
         <!-- Supplements -->
-        <div class="detail-item">
+        <div class="detail-item${entry.supplements ? '' : ' empty'}">
           <strong>Supplements:</strong>
           <span>${entry.supplements || 'None'}</span>
         </div>
 
         <!-- Steps -->
-        <div class="detail-item">
+        <div class="detail-item${entry.steps ? '' : ' empty'}">
           <strong>Steps:</strong>
           <span class="${entry.steps ? 'steps-value' : ''}">${entry.steps ? entry.steps.toLocaleString() : 'Not logged'}</span>
         </div>
