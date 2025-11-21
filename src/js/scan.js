@@ -82,10 +82,7 @@ async function searchBarcode() {
 
 // Display food details
 function displayFoodDetails(product) {
-  const resultsDiv = document.getElementById('scan-results');
   const detailsDiv = document.getElementById('food-details');
-
-  resultsDiv.style.display = 'block';
 
   const nutriments = product.nutriments || {};
   const calories = nutriments['energy-kcal_100g'] || 0;
@@ -99,34 +96,49 @@ function displayFoodDetails(product) {
 
   detailsDiv.innerHTML = `
     <div class="food-card">
-      ${product.image_url ? `<img src="${product.image_url}" alt="${product.product_name}">` : ''}
+      ${product.image_url ? `<img src="${product.image_url}" alt="${product.product_name}" style="max-width: 200px; border-radius: 8px; margin-bottom: 16px;">` : ''}
       <div>
-        <h4>${product.product_name || 'Unknown Product'}</h4>
-        <p><strong>Brand:</strong> ${product.brands || 'Unknown'}</p>
+        <h4 style="margin-bottom: 8px; color: #fff;">${product.product_name || 'Unknown Product'}</h4>
+        <p style="color: #94a3b8; margin-bottom: 16px;"><strong>Brand:</strong> ${product.brands || 'Unknown'}</p>
 
-        <h5>Nutrition (per 100g):</h5>
-        <ul>
-          <li>Calories <strong>${calories} kcal</strong></li>
-          <li>Protein <strong>${protein}g</strong></li>
-          <li>Carbs <strong>${carbs}g</strong></li>
-          <li>Fat <strong>${fat}g</strong></li>
-          <li>Sugars <strong>${sugar}g</strong></li>
+        <h5 style="margin-bottom: 12px; color: #cbd5e1;">Nutrition (per 100g):</h5>
+        <ul style="list-style: none; padding: 0; margin: 0 0 16px 0;">
+          <li style="padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between;">
+            <span style="color: #94a3b8;">Calories</span>
+            <strong style="color: #fff;">${calories} kcal</strong>
+          </li>
+          <li style="padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between;">
+            <span style="color: #94a3b8;">Protein</span>
+            <strong style="color: #fff;">${protein}g</strong>
+          </li>
+          <li style="padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between;">
+            <span style="color: #94a3b8;">Carbs</span>
+            <strong style="color: #fff;">${carbs}g</strong>
+          </li>
+          <li style="padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between;">
+            <span style="color: #94a3b8;">Fat</span>
+            <strong style="color: #fff;">${fat}g</strong>
+          </li>
+          <li style="padding: 8px 0; display: flex; justify-content: space-between;">
+            <span style="color: #94a3b8;">Sugars</span>
+            <strong style="color: #fff;">${sugar}g</strong>
+          </li>
         </ul>
 
         ${!hasNutritionData ? `
-          <div class="nutrition-warning">
-            <i class="las la-exclamation-triangle"></i>
-            <span>Nutrition data is missing or incomplete</span>
+          <div class="nutrition-warning" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 8px; padding: 12px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+            <i class="las la-exclamation-triangle" style="color: #ef4444;"></i>
+            <span style="color: #fca5a5;">Nutrition data is missing or incomplete</span>
           </div>
         ` : ''}
 
-        <div class="food-card-actions">
+        <div class="food-card-actions" style="display: flex; gap: 8px; margin-top: 20px;">
           ${!hasNutritionData ? `
-            <button class="btn btn-secondary" onclick="openManualNutritionModal()">
+            <button class="btn btn-secondary" onclick="closeModal('foodDetailsModal'); openManualNutritionModal();">
               <i class="las la-edit"></i> Enter Manually
             </button>
           ` : ''}
-          <button class="btn btn-primary" onclick="openAddToMealModal()">
+          <button class="btn btn-primary" onclick="closeModal('foodDetailsModal'); openAddToMealModal();">
             <i class="las la-plus"></i> Add to Meal
           </button>
         </div>
@@ -134,8 +146,8 @@ function displayFoodDetails(product) {
     </div>
   `;
 
-  // Scroll to results
-  resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  // Open modal
+  openModal('foodDetailsModal');
 }
 
 // Open the add to meal modal
