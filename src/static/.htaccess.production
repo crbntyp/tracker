@@ -1,13 +1,13 @@
 # Apache configuration for PRODUCTION
 # Copy this file to .htaccess on your live server
-# RewriteBase is set to /tracker/ for www.carbontype.co/tracker/
+# RewriteBase is set to /trckr/ for www.crbntyp.com/trckr/
 
 # Set directory index
 DirectoryIndex index.php index.html
 
 # Enable rewrite engine
 RewriteEngine On
-RewriteBase /tracker/
+RewriteBase /trckr/
 
 # Serve static files directly
 RewriteRule ^(.*\.(html|css|js|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot|ico))$ - [L]
