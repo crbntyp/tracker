@@ -194,6 +194,11 @@
     document.addEventListener('DOMContentLoaded', async function() {
       await initStorage();
       await initUI();
+
+      // Migrate localStorage to database (one-time)
+      await migrateRecentItemsToDatabase();
+
+      // Load recent items from database
       loadRecentItems();
 
       // Set today's date by default

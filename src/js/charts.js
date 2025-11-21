@@ -5,6 +5,7 @@ let changeRateChart = null;
 let weeklyComparisonChart = null;
 let calorieChart = null;
 let stepsChart = null;
+let nutritionChart = null;
 let currentPeriod = 365; // Default to All Time
 
 // Chart.js defaults for dark theme
@@ -24,6 +25,7 @@ function initCharts() {
     initChangeRateChart(currentPeriod);
     initWeeklyComparisonChart(currentPeriod);
     initStepsChart(currentPeriod);
+    initNutritionChart(currentPeriod);
     displayStatistics(currentPeriod);
     setupPeriodButtons();
     setupTabButtons();
@@ -81,6 +83,12 @@ function showChartsSkeleton() {
   const stepsCanvas = document.getElementById('stepsChart');
   if (stepsCanvas && stepsCanvas.parentElement) {
     stepsCanvas.parentElement.innerHTML = loadingHTML;
+  }
+
+  // Nutrition chart skeleton
+  const nutritionCanvas = document.getElementById('nutritionChart');
+  if (nutritionCanvas && nutritionCanvas.parentElement) {
+    nutritionCanvas.parentElement.innerHTML = loadingHTML;
   }
 
   // Statistics skeleton
@@ -336,6 +344,7 @@ function setupPeriodButtons() {
       initChangeRateChart(period);
       initWeeklyComparisonChart(period);
       initStepsChart(period);
+      initNutritionChart(period);
       displayStatistics(period);
     });
   });
@@ -761,6 +770,214 @@ function initCalorieChart(days) {
         x: {
           stacked: true,
           grid: { display: false }
+        }
+      }
+    }
+  });
+}
+
+// Initialize nutrition chart
+function initNutritionChart(days) {
+  let canvas = document.getElementById('nutritionChart');
+
+  // Recreate canvas if it was destroyed by loading skeleton
+  if (!canvas) {
+    const sections = document.querySelectorAll('.chart-section');
+    for (const section of sections) {
+      if (section.textContent.includes('Nutrition Trends')) {
+        const container = section.querySelector('.chart-container');
+        if (container) {
+          container.innerHTML = '<canvas id="nutritionChart"></canvas>';
+          canvas = document.getElementById('nutritionChart');
+          break;
+        }
+      }
+    }
+  }
+
+  if (!canvas) return;
+
+  const entries = getLastNDaysEntries(days);
+
+  // Aggregate nutrition data by date
+  const nutritionByDate = {};
+
+  entries.forEach(entry => {
+    if (entry.meals) {
+      let dailyTotals = {
+        calories: 0,
+        protein: 0,
+        carbs: 0,
+        fat: 0
+      };
+
+      // Sum up all meals for the day
+      Object.values(entry.meals).forEach(mealItems => {
+        if (Array.isArray(mealItems)) {
+          mealItems.forEach(item => {
+            dailyTotals.calories += item.calories || 0;
+            dailyTotals.protein += item.protein || 0;
+            dailyTotals.carbs += item.carbs || 0;
+            dailyTotals.fat += item.fat || 0;
+          });
+        }
+      });
+
+      // Only include days with nutrition data
+      if (dailyTotals.calories > 0 || dailyTotals.protein > 0 || dailyTotals.carbs > 0 || dailyTotals.fat > 0) {
+        nutritionByDate[entry.date] = dailyTotals;
+      }
+    }
+  });
+
+  const nutritionData = Object.entries(nutritionByDate)
+    .map(([date, totals]) => ({ date, ...totals }))
+    .sort((a, b) => a.date.localeCompare(b.date));
+
+  if (nutritionData.length === 0) {
+    canvas.parentElement.innerHTML = '<p class="no-data-message">No nutrition data available yet. Start tracking your meals to see trends!</p>';
+    return;
+  }
+
+  const labels = nutritionData.map(d => formatDateShort(d.date));
+  const caloriesData = nutritionData.map(d => Math.round(d.calories));
+  const proteinData = nutritionData.map(d => Math.round(d.protein));
+  const carbsData = nutritionData.map(d => Math.round(d.carbs));
+  const fatData = nutritionData.map(d => Math.round(d.fat));
+
+  // Destroy existing chart if it exists
+  if (nutritionChart) {
+    nutritionChart.destroy();
+  }
+
+  const ctx = canvas.getContext('2d');
+  nutritionChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Calories (kcal)',
+          data: caloriesData,
+          borderColor: '#fbbf24',
+          backgroundColor: 'rgba(251, 191, 36, 0.1)',
+          borderWidth: 2,
+          tension: 0.4,
+          fill: false,
+          pointRadius: 3,
+          pointHoverRadius: 5,
+          yAxisID: 'y'
+        },
+        {
+          label: 'Protein (g)',
+          data: proteinData,
+          borderColor: '#60a5fa',
+          backgroundColor: 'rgba(96, 165, 250, 0.1)',
+          borderWidth: 2,
+          tension: 0.4,
+          fill: false,
+          pointRadius: 3,
+          pointHoverRadius: 5,
+          yAxisID: 'y1'
+        },
+        {
+          label: 'Carbs (g)',
+          data: carbsData,
+          borderColor: '#f472b6',
+          backgroundColor: 'rgba(244, 114, 182, 0.1)',
+          borderWidth: 2,
+          tension: 0.4,
+          fill: false,
+          pointRadius: 3,
+          pointHoverRadius: 5,
+          yAxisID: 'y1'
+        },
+        {
+          label: 'Fat (g)',
+          data: fatData,
+          borderColor: '#34d399',
+          backgroundColor: 'rgba(52, 211, 153, 0.1)',
+          borderWidth: 2,
+          tension: 0.4,
+          fill: false,
+          pointRadius: 3,
+          pointHoverRadius: 5,
+          yAxisID: 'y1'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: {
+        mode: 'index',
+        intersect: false
+      },
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top',
+          labels: {
+            usePointStyle: true,
+            padding: 15,
+            font: { size: 12 }
+          }
+        },
+        tooltip: {
+          backgroundColor: 'rgba(15, 23, 42, 0.95)',
+          titleColor: '#fed202',
+          bodyColor: '#cbd5e1',
+          padding: 12,
+          borderColor: 'rgba(254, 210, 2, 0.2)',
+          borderWidth: 1,
+          displayColors: true,
+          callbacks: {
+            label: function(context) {
+              let label = context.dataset.label || '';
+              if (label) {
+                label += ': ';
+              }
+              label += context.parsed.y;
+              return label;
+            }
+          }
+        }
+      },
+      scales: {
+        y: {
+          type: 'linear',
+          display: true,
+          position: 'left',
+          title: {
+            display: true,
+            text: 'Calories (kcal)',
+            color: '#fbbf24'
+          },
+          grid: { color: 'rgba(100, 116, 139, 0.1)' },
+          ticks: {
+            color: '#fbbf24'
+          }
+        },
+        y1: {
+          type: 'linear',
+          display: true,
+          position: 'right',
+          title: {
+            display: true,
+            text: 'Macros (g)',
+            color: '#cbd5e1'
+          },
+          grid: { display: false },
+          ticks: {
+            color: '#cbd5e1'
+          }
+        },
+        x: {
+          grid: { display: false },
+          ticks: {
+            maxRotation: 45,
+            minRotation: 45
+          }
         }
       }
     }

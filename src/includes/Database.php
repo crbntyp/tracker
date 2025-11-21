@@ -79,6 +79,7 @@ class Database {
                 'lunch' => json_encode(['logged' => false]),
                 'dinner' => json_encode(['logged' => false]),
                 'drinks' => json_encode([]),
+                'meals' => null,
                 'notes' => '',
                 'diary' => '',
                 'gym' => false,
@@ -90,10 +91,10 @@ class Database {
         return $entry;
     }
 
-    public function saveEntry($userId, $date, $weight, $lunch, $dinner, $drinks, $notes, $diary = null, $gym = null, $supplements = null, $steps = null) {
+    public function saveEntry($userId, $date, $weight, $lunch, $dinner, $drinks, $notes, $diary = null, $gym = null, $supplements = null, $steps = null, $meals = null) {
         $stmt = $this->conn->prepare(
-            "INSERT INTO entries (user_id, date, weight, lunch, dinner, drinks, notes, diary, gym, supplements, steps)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            "INSERT INTO entries (user_id, date, weight, lunch, dinner, drinks, notes, diary, gym, supplements, steps, meals)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
              ON DUPLICATE KEY UPDATE
                 weight = COALESCE(VALUES(weight), weight),
                 lunch = COALESCE(VALUES(lunch), lunch),
@@ -103,7 +104,8 @@ class Database {
                 diary = COALESCE(VALUES(diary), diary),
                 gym = COALESCE(VALUES(gym), gym),
                 supplements = COALESCE(VALUES(supplements), supplements),
-                steps = COALESCE(VALUES(steps), steps)"
+                steps = COALESCE(VALUES(steps), steps),
+                meals = COALESCE(VALUES(meals), meals)"
         );
 
         $stmt->execute([
@@ -117,7 +119,8 @@ class Database {
             $diary,
             $gym,
             $supplements,
-            $steps
+            $steps,
+            $meals
         ]);
 
         return $this->getEntryByDate($userId, $date);
@@ -152,5 +155,61 @@ class Database {
         );
         $stmt->execute([json_encode($settings), $userId]);
         return $this->getSettings($userId);
+    }
+
+    // Recent Foods functions
+    public function getRecentFoods($userId) {
+        // Clean up old items (older than 30 days)
+        $this->cleanupOldRecentFoods($userId);
+
+        $stmt = $this->conn->prepare(
+            "SELECT * FROM recent_foods
+             WHERE user_id = ?
+             ORDER BY created_at DESC
+             LIMIT 10"
+        );
+        $stmt->execute([$userId]);
+        return $stmt->fetchAll();
+    }
+
+    public function addRecentFood($userId, $name, $brand, $barcode, $imageUrl, $calories, $protein, $carbs, $fat, $sugar) {
+        // Check if item already exists (same barcode)
+        $stmt = $this->conn->prepare(
+            "SELECT id FROM recent_foods WHERE user_id = ? AND barcode = ?"
+        );
+        $stmt->execute([$userId, $barcode]);
+        $existing = $stmt->fetch();
+
+        if ($existing) {
+            // Update the timestamp to move it to the top
+            $stmt = $this->conn->prepare(
+                "UPDATE recent_foods
+                 SET created_at = CURRENT_TIMESTAMP
+                 WHERE id = ?"
+            );
+            $stmt->execute([$existing['id']]);
+            return $existing['id'];
+        } else {
+            // Insert new item
+            $stmt = $this->conn->prepare(
+                "INSERT INTO recent_foods
+                 (user_id, name, brand, barcode, image_url, calories, protein, carbs, fat, sugar)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            );
+            $stmt->execute([
+                $userId, $name, $brand, $barcode, $imageUrl,
+                $calories, $protein, $carbs, $fat, $sugar
+            ]);
+            return $this->conn->lastInsertId();
+        }
+    }
+
+    private function cleanupOldRecentFoods($userId) {
+        $stmt = $this->conn->prepare(
+            "DELETE FROM recent_foods
+             WHERE user_id = ?
+             AND created_at < DATE_SUB(NOW(), INTERVAL 30 DAY)"
+        );
+        $stmt->execute([$userId]);
     }
 }

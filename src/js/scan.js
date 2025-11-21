@@ -217,62 +217,116 @@ async function addFoodToMeal(date, mealType, product) {
   addToRecentItems(foodItem);
 }
 
+// Migrate localStorage recent items to database (one-time)
+async function migrateRecentItemsToDatabase() {
+  const localItems = localStorage.getItem('recentFoodItems');
+  if (!localItems) return; // Nothing to migrate
+
+  try {
+    const items = JSON.parse(localItems);
+    if (items.length === 0) {
+      localStorage.removeItem('recentFoodItems');
+      return;
+    }
+
+    // Add each item to the database
+    for (const item of items) {
+      await addToRecentItems(item);
+    }
+
+    // Clear localStorage after successful migration
+    localStorage.removeItem('recentFoodItems');
+    console.log('Migrated', items.length, 'recent items to database');
+  } catch (error) {
+    console.error('Error migrating recent items:', error);
+  }
+}
+
 // Add to recent items
-function addToRecentItems(foodItem) {
-  let recentItems = JSON.parse(localStorage.getItem('recentFoodItems') || '[]');
-
-  // Remove duplicates (same barcode)
-  recentItems = recentItems.filter(item => item.barcode !== foodItem.barcode);
-
-  // Add to front
-  recentItems.unshift(foodItem);
-
-  // Keep only last 10 items
-  recentItems = recentItems.slice(0, 10);
-
-  localStorage.setItem('recentFoodItems', JSON.stringify(recentItems));
+async function addToRecentItems(foodItem) {
+  try {
+    await API.post(buildPath('/api/recent-foods'), {
+      name: foodItem.name,
+      brand: foodItem.brand,
+      barcode: foodItem.barcode,
+      image: foodItem.image,
+      calories: foodItem.calories,
+      protein: foodItem.protein,
+      carbs: foodItem.carbs,
+      fat: foodItem.fat,
+      sugar: foodItem.sugar
+    });
+  } catch (error) {
+    console.error('Error saving to recent items:', error);
+  }
 }
 
 // Load and display recent items
-function loadRecentItems() {
-  const recentItems = JSON.parse(localStorage.getItem('recentFoodItems') || '[]');
+async function loadRecentItems() {
   const listDiv = document.getElementById('saved-items-list');
 
-  if (recentItems.length === 0) {
-    // Show 3 skeleton placeholders
+  try {
+    const recentItems = await API.fetch(buildPath('/api/recent-foods'));
+
+    if (!recentItems || recentItems.length === 0) {
+      // Show 3 skeleton placeholders
+      listDiv.innerHTML = `
+        <div class="skeleton-item"></div>
+        <div class="skeleton-item"></div>
+        <div class="skeleton-item"></div>
+      `;
+      return;
+    }
+
+    listDiv.innerHTML = recentItems.map(item => `
+      <div class="saved-item" onclick="quickAddFromRecent('${item.barcode}')">
+        <div class="saved-item-info">
+          <div class="saved-item-name">${item.name}</div>
+          <div class="saved-item-macros">
+            ${Math.round(item.calories)} kcal | P: ${Math.round(item.protein)}g | C: ${Math.round(item.carbs)}g | F: ${Math.round(item.fat)}g
+          </div>
+        </div>
+        <i class="las la-plus" style="font-size: 24px; color: var(--accent-color);"></i>
+      </div>
+    `).join('');
+  } catch (error) {
+    console.error('Error loading recent items:', error);
     listDiv.innerHTML = `
       <div class="skeleton-item"></div>
       <div class="skeleton-item"></div>
       <div class="skeleton-item"></div>
     `;
-    return;
   }
-
-  listDiv.innerHTML = recentItems.map(item => `
-    <div class="saved-item" onclick="quickAddFromRecent('${item.barcode}')">
-      <div class="saved-item-info">
-        <div class="saved-item-name">${item.name}</div>
-        <div class="saved-item-macros">
-          ${item.calories} kcal | P: ${item.protein}g | C: ${item.carbs}g | F: ${item.fat}g
-        </div>
-      </div>
-      <i class="las la-plus" style="font-size: 24px; color: var(--accent-color);"></i>
-    </div>
-  `).join('');
 }
 
 // Quick add from recent items
 async function quickAddFromRecent(barcode) {
   try {
-    const response = await fetch(`https://world.openfoodfacts.org/api/v0/product/${barcode}.json`);
-    const data = await response.json();
+    // Get recent items from API
+    const recentItems = await API.fetch(buildPath('/api/recent-foods'));
+    const item = recentItems.find(i => i.barcode === barcode);
 
-    if (data.status === 1) {
-      currentProduct = data.product;
-      openAddToMealModal();
-    } else {
-      alert('Product not found');
+    if (!item) {
+      alert('Product not found in recent items');
+      return;
     }
+
+    // Reconstruct the product object from stored data
+    currentProduct = {
+      product_name: item.name,
+      brands: item.brand || '',
+      code: item.barcode,
+      image_url: item.image_url || '',
+      nutriments: {
+        'energy-kcal_100g': parseFloat(item.calories),
+        'proteins_100g': parseFloat(item.protein),
+        'carbohydrates_100g': parseFloat(item.carbs),
+        'fat_100g': parseFloat(item.fat),
+        'sugars_100g': parseFloat(item.sugar)
+      }
+    };
+
+    openAddToMealModal();
   } catch (error) {
     console.error('Error loading product:', error);
     alert('Error loading product');

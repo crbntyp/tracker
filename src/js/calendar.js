@@ -203,6 +203,16 @@ function showDayDetails(dateStr) {
         </div>
       </div>
     </div>
+
+    <!-- Nutrition Record -->
+    ${hasMeals ? `
+      <div class="nutrition-record">
+        <h3>Nutrition Record</h3>
+        <div class="nutrition-items-list">
+          ${renderMealItems(entry.meals)}
+        </div>
+      </div>
+    ` : ''}
   `;
 
   detailsEl.innerHTML = html;
@@ -210,6 +220,48 @@ function showDayDetails(dateStr) {
 
   // Remove fade-in class after animation completes to allow re-triggering
   setTimeout(() => detailsEl.classList.remove('fade-in'), 300);
+}
+
+// Render meal items grouped by meal type
+function renderMealItems(meals) {
+  if (!meals) return '';
+
+  const mealOrder = ['breakfast', 'lunch', 'dinner', 'snacks'];
+  const mealIcons = {
+    breakfast: 'la-sun',
+    lunch: 'la-cloud-sun',
+    dinner: 'la-moon',
+    snacks: 'la-cookie'
+  };
+
+  let html = '';
+
+  mealOrder.forEach(mealType => {
+    const items = meals[mealType];
+    if (items && items.length > 0) {
+      items.forEach((item, index) => {
+        html += `
+          <div class="nutrition-item">
+            <button class="nutrition-item-delete" onclick="deleteMealItem('${selectedDate}', '${mealType}', ${index})" title="Delete">
+              <i class="las la-times"></i>
+            </button>
+            <div class="nutrition-item-header">
+              <i class="las ${mealIcons[mealType]}"></i>
+              <span class="nutrition-item-name">${item.name}</span>
+            </div>
+            <div class="nutrition-item-macros">
+              <span>${Math.round(item.calories)} kcal</span>
+              <span>P: ${Math.round(item.protein)}g</span>
+              <span>C: ${Math.round(item.carbs)}g</span>
+              <span>F: ${Math.round(item.fat)}g</span>
+            </div>
+          </div>
+        `;
+      });
+    }
+  });
+
+  return html || '<p style="color: #999; text-align: center; padding: 20px;">No meals logged</p>';
 }
 
 // Calculate daily nutrition totals
@@ -261,6 +313,34 @@ async function saveDiaryEntry(date) {
   } catch (error) {
     console.error('Error saving diary:', error);
     showNotification('Error saving diary!');
+  }
+}
+
+// Delete a meal item
+async function deleteMealItem(date, mealType, itemIndex) {
+  if (!confirm('Delete this food item?')) return;
+
+  try {
+    const entry = getEntry(date);
+
+    if (!entry.meals || !entry.meals[mealType]) {
+      showNotification('Error: Meal not found');
+      return;
+    }
+
+    // Remove the item from the array
+    entry.meals[mealType].splice(itemIndex, 1);
+
+    // Save the updated entry
+    await saveEntry(date, entry);
+
+    // Refresh the day details
+    showDayDetails(date);
+
+    showNotification('Food item deleted');
+  } catch (error) {
+    console.error('Error deleting meal item:', error);
+    showNotification('Error deleting item');
   }
 }
 
