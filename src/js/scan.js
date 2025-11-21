@@ -316,7 +316,7 @@ async function migrateRecentItemsToDatabase() {
 async function addToRecentItems(foodItem) {
   try {
     console.log('Adding to recent items:', foodItem);
-    const response = await API.post(buildPath('/api/recent-foods'), {
+    const response = await API.post(buildPath('/api/recent-foods.php'), {
       name: foodItem.name,
       brand: foodItem.brand,
       barcode: foodItem.barcode,
@@ -339,7 +339,7 @@ async function loadRecentItems() {
 
   try {
     console.log('Loading recent items...');
-    const recentItems = await API.fetch(buildPath('/api/recent-foods'));
+    const recentItems = await API.fetch(buildPath('/api/recent-foods.php'));
     console.log('Recent items loaded:', recentItems);
 
     if (!recentItems || recentItems.length === 0) {
@@ -378,7 +378,7 @@ async function loadRecentItems() {
 async function quickAddFromRecent(barcode) {
   try {
     // Get recent items from API
-    const recentItems = await API.fetch(buildPath('/api/recent-foods'));
+    const recentItems = await API.fetch(buildPath('/api/recent-foods.php'));
     const item = recentItems.find(i => i.barcode === barcode);
 
     if (!item) {
