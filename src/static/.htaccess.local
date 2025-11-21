@@ -1,4 +1,6 @@
-# Apache configuration
+# Apache configuration for LOCAL DEVELOPMENT
+# Copy this file to .htaccess for local use
+# RewriteBase is set to / for localhost:8000
 
 # Set directory index
 DirectoryIndex index.php index.html
@@ -36,9 +38,11 @@ RewriteRule ^ index.php [L]
 # Disable directory browsing
 Options -Indexes
 
-# PHP settings
+# PHP settings for development
 <IfModule mod_php.c>
     php_value upload_max_filesize 10M
     php_value post_max_size 10M
     php_value max_execution_time 300
+    php_flag display_errors On
+    php_flag log_errors On
 </IfModule>

@@ -25,10 +25,9 @@ npm-debug.log*
 .env.local
 .env.php
 
-# Local development overrides (don't commit these!)
+# Active .htaccess files (environment-specific, don't commit!)
+# Use .htaccess.local or .htaccess.production as templates
 .htaccess
-.htaccess.local
-.htaccess.production
 
 # Cache
 .cache/
