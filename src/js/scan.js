@@ -144,10 +144,38 @@ function openAddToMealModal() {
 
   document.getElementById('modal-product-name').textContent = currentProduct.product_name || 'Unknown Product';
 
+  // Reset portion size to 100g
+  document.getElementById('portion-size').value = 100;
+
+  // Update portion preview
+  updatePortionPreview();
+
   // Clear previous selection
   document.querySelectorAll('.meal-button').forEach(b => b.classList.remove('selected'));
 
   openModal('addToMealModal');
+}
+
+// Update portion preview with calculated macros
+function updatePortionPreview() {
+  if (!currentProduct) return;
+
+  const portionSize = parseFloat(document.getElementById('portion-size').value) || 100;
+  const multiplier = portionSize / 100;
+
+  const nutriments = currentProduct.nutriments || {};
+  const calories = (nutriments['energy-kcal_100g'] || 0) * multiplier;
+  const protein = (nutriments.proteins_100g || 0) * multiplier;
+  const carbs = (nutriments.carbohydrates_100g || 0) * multiplier;
+  const fat = (nutriments.fat_100g || 0) * multiplier;
+
+  const macrosDiv = document.getElementById('portion-macros');
+  macrosDiv.innerHTML = `
+    <span><strong>${Math.round(calories)}</strong> kcal</span>
+    <span>P: <strong>${Math.round(protein * 10) / 10}g</strong></span>
+    <span>C: <strong>${Math.round(carbs * 10) / 10}g</strong></span>
+    <span>F: <strong>${Math.round(fat * 10) / 10}g</strong></span>
+  `;
 }
 
 // Confirm adding to meal
@@ -194,17 +222,37 @@ async function addFoodToMeal(date, mealType, product) {
     };
   }
 
+  // Get portion size from modal
+  const portionSize = parseFloat(document.getElementById('portion-size').value) || 100;
+  const multiplier = portionSize / 100;
+
   const nutriments = product.nutriments || {};
+
+  // Store both base (per 100g) and actual values
+  const baseCal = nutriments['energy-kcal_100g'] || 0;
+  const baseProtein = nutriments.proteins_100g || 0;
+  const baseCarbs = nutriments.carbohydrates_100g || 0;
+  const baseFat = nutriments.fat_100g || 0;
+  const baseSugar = nutriments.sugars_100g || 0;
+
   const foodItem = {
     name: product.product_name || 'Unknown',
     brand: product.brands || '',
     barcode: product.code || '',
     image: product.image_url || '',
-    calories: nutriments['energy-kcal_100g'] || 0,
-    protein: nutriments.proteins_100g || 0,
-    carbs: nutriments.carbohydrates_100g || 0,
-    fat: nutriments.fat_100g || 0,
-    sugar: nutriments.sugars_100g || 0,
+    portionSize: portionSize,
+    // Base values (per 100g)
+    baseCal: baseCal,
+    baseProtein: baseProtein,
+    baseCarbs: baseCarbs,
+    baseFat: baseFat,
+    baseSugar: baseSugar,
+    // Actual values (calculated from portion)
+    calories: baseCal * multiplier,
+    protein: baseProtein * multiplier,
+    carbs: baseCarbs * multiplier,
+    fat: baseFat * multiplier,
+    sugar: baseSugar * multiplier,
     timestamp: new Date().toISOString()
   };
 
@@ -213,8 +261,18 @@ async function addFoodToMeal(date, mealType, product) {
   // Save entry to database
   await saveEntry(date, entry);
 
-  // Add to recent items
-  addToRecentItems(foodItem);
+  // Add to recent items (use base values per 100g)
+  addToRecentItems({
+    name: foodItem.name,
+    brand: foodItem.brand,
+    barcode: foodItem.barcode,
+    image: foodItem.image,
+    calories: baseCal,
+    protein: baseProtein,
+    carbs: baseCarbs,
+    fat: baseFat,
+    sugar: baseSugar
+  });
 }
 
 // Migrate localStorage recent items to database (one-time)

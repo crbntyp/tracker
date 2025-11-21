@@ -108,6 +108,19 @@
         <p id="modal-product-name" style="color: #999; margin-bottom: 20px;"></p>
 
         <div class="form-group">
+          <label>Portion Size (grams)</label>
+          <input type="number" id="portion-size" value="100" min="1" step="1" oninput="updatePortionPreview()" />
+          <small style="color: #64748b; font-size: 12px; margin-top: 4px; display: block;">Nutrition data is per 100g. Adjust to your actual portion.</small>
+        </div>
+
+        <div id="portion-preview" style="background: rgba(254, 210, 2, 0.05); border: 1px solid rgba(254, 210, 2, 0.2); border-radius: 8px; padding: 12px; margin-bottom: 20px;">
+          <div style="font-size: 11px; color: #fed202; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; font-weight: 600;">Your Portion</div>
+          <div id="portion-macros" style="display: flex; gap: 16px; font-size: 13px; color: #cbd5e1;">
+            <!-- Will be populated by JS -->
+          </div>
+        </div>
+
+        <div class="form-group">
           <label>Select Date</label>
           <input type="date" id="meal-date" />
         </div>

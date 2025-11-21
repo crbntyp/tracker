@@ -247,7 +247,7 @@ function renderMealItems(meals) {
             </button>
             <div class="nutrition-item-header">
               <i class="las ${mealIcons[mealType]}"></i>
-              <span class="nutrition-item-name">${item.name}</span>
+              <span class="nutrition-item-name">${item.name} ${item.portionSize ? `(${item.portionSize}g)` : ''}</span>
             </div>
             <div class="nutrition-item-macros">
               <span>${Math.round(item.calories)} kcal</span>
