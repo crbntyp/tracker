@@ -7,27 +7,28 @@ This app requires different `.htaccess` configurations for local vs production e
 | Environment | URL Structure | RewriteBase |
 |-------------|--------------|-------------|
 | Local (Docker) | `localhost:8000/` | `/` |
-| Production | `www.carbontype.co/tracker/` | `/tracker/` |
+| Production | `www.crbntyp.com/trckr/` | `/trckr/` |
 
 ## .htaccess Setup
 
-The `.htaccess` file is **NOT tracked in git** to prevent environment conflicts. Instead, use the template files:
+The build process (`node build.js`) automatically copies `.htaccess.production` as `.htaccess` in the `dist/` folder. This means:
+
+- **Production builds include the correct .htaccess automatically**
+- The `.htaccess` file is still NOT tracked in git
+- Template files are kept for reference/modification
 
 ### Local Development
 
+For local development, you may need to swap to the local template:
+
 ```bash
-# Copy the local template to create your .htaccess
+# After running build, replace with local template if needed
 cp src/static/.htaccess.local dist/.htaccess
 ```
 
 ### Production Deployment
 
-```bash
-# Copy the production template to your web server
-cp src/static/.htaccess.production /path/to/tracker/.htaccess
-```
-
-Or manually copy `src/static/.htaccess.production` to your live server and rename it to `.htaccess`.
+The build automatically includes the production `.htaccess`. Just deploy the `dist/` folder contents.
 
 ## Key Differences Between Templates
 
@@ -35,18 +36,24 @@ Or manually copy `src/static/.htaccess.production` to your live server and renam
 - `RewriteBase /` - App runs at root
 - `display_errors On` - Shows PHP errors for debugging
 
-### .htaccess.production  
-- `RewriteBase /tracker/` - App runs in subdirectory
+### .htaccess.production
+- `RewriteBase /trckr/` - App runs in subdirectory
 - `display_errors Off` - Hides PHP errors for security
+- Includes `AddType` directive to ensure PHP files are executed
 
 ## Deployment Checklist
 
-1. **Never commit `.htaccess` files** - They're in `.gitignore` for a reason
-2. **Always use the correct template** for your environment
-3. **After deploying code**, verify your `.htaccess` is still correct
+1. Run `node build.js` to create the dist folder
+2. Deploy the contents of `dist/` to your server
+3. Verify `.htaccess` was included in the deployment
 4. **If you get 403/404 errors**, check your `.htaccess` RewriteBase setting
 
 ## Troubleshooting
+
+### PHP files are downloading instead of executing
+- Check if `.htaccess` exists on server
+- Verify Apache has `mod_php` or PHP-FPM configured
+- The `.htaccess` includes `AddType application/x-httpd-php .php` which should help
 
 ### 403 Forbidden Error
 - Check if `.htaccess` exists on server
@@ -59,4 +66,4 @@ Or manually copy `src/static/.htaccess.production` to your live server and renam
 
 ### Site works locally but not on production
 - 99% of the time this is a `RewriteBase` mismatch
-- Local uses `/`, production uses `/tracker/`
+- Local uses `/`, production uses `/trckr/`
