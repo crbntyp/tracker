@@ -1,6 +1,11 @@
 # Apache configuration for PRODUCTION
 DirectoryIndex index.php index.html
 
+# Ensure PHP files are executed, not downloaded
+<IfModule mod_mime.c>
+    AddType application/x-httpd-php .php
+</IfModule>
+
 # Enable rewrite engine
 RewriteEngine On
 RewriteBase /trckr/
@@ -24,4 +29,18 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^ index.php [L]
 
+# Security headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+</IfModule>
+
+# Disable directory browsing
 Options -Indexes
+
+# PHP settings for production
+<IfModule mod_php.c>
+    php_flag display_errors Off
+    php_flag log_errors On
+</IfModule>

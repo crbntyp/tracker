@@ -147,11 +147,22 @@ function copyStatic() {
   const staticFiles = fs.readdirSync(staticDir);
 
   staticFiles.forEach(file => {
+    // Skip .htaccess template files - we'll handle them separately
+    if (file.startsWith('.htaccess.')) {
+      return;
+    }
     copyFile(
       path.join(staticDir, file),
       path.join(DIST_DIR, file)
     );
   });
+
+  // Copy production .htaccess as the actual .htaccess file
+  const htaccessProd = path.join(staticDir, '.htaccess.production');
+  if (fs.existsSync(htaccessProd)) {
+    copyFile(htaccessProd, path.join(DIST_DIR, '.htaccess'));
+    log('✓ Production .htaccess copied', 'green');
+  }
 
   log('✓ Static assets copied', 'green');
 }
