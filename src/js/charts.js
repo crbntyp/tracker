@@ -240,9 +240,12 @@ function initWeightChart(days) {
           ticks: {
             color: '#94a3b8',
             font: {
-              size: 12,
+              size: 11,
               weight: '500'
-            }
+            },
+            autoSkip: false,
+            maxRotation: 45,
+            minRotation: 45
           }
         }
       },

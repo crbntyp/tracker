@@ -65,7 +65,7 @@ try {
             $meals = isset($input['meals']) ? json_encode($input['meals']) : null;
             $notes = $input['notes'] ?? null;
             $diary = $input['diary'] ?? null;
-            $gym = isset($input['gym']) ? (bool)$input['gym'] : null;
+            $gym = isset($input['gym']) ? ($input['gym'] ? 1 : 0) : null;
             $supplements = $input['supplements'] ?? null;
             $steps = isset($input['steps']) ? (int)$input['steps'] : null;
 

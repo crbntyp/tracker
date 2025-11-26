@@ -41,6 +41,7 @@ auth/test-callback.php
 # Extra documentation
 README.local.md
 DEPLOYMENT-CPANEL.md
+CLAUDE.md
 
 # Docker files (development only)
 # Dockerfile and docker-compose.yml are intentionally NOT ignored

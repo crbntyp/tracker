@@ -6,11 +6,6 @@ error_reporting(E_ALL);
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 
-// Start session early (before any output)
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
 // Load environment variables from .env file if it exists
 // Try multiple locations
 $envPaths = [
@@ -43,11 +38,16 @@ define('GOOGLE_REDIRECT_URI', getenv('GOOGLE_REDIRECT_URI') ?: 'https://www.crbn
 define('BASE_URL', getenv('BASE_URL') !== false ? getenv('BASE_URL') : '/trckr');
 define('APP_ENV', getenv('APP_ENV') ?: 'production');
 
-// Session configuration
+// Session configuration - MUST be set before session_start()
 ini_set('session.cookie_httponly', 1);
 ini_set('session.use_only_cookies', 1);
 if (APP_ENV === 'production') {
     ini_set('session.cookie_secure', 1); // HTTPS only
+}
+
+// Start session after configuring settings
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
 }
 
 // CORS headers for AJAX requests

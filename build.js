@@ -144,17 +144,22 @@ function copyStatic() {
     return;
   }
 
-  const staticFiles = fs.readdirSync(staticDir);
+  const staticEntries = fs.readdirSync(staticDir, { withFileTypes: true });
 
-  staticFiles.forEach(file => {
+  staticEntries.forEach(entry => {
     // Skip .htaccess template files - we'll handle them separately
-    if (file.startsWith('.htaccess.')) {
+    if (entry.name.startsWith('.htaccess.')) {
       return;
     }
-    copyFile(
-      path.join(staticDir, file),
-      path.join(DIST_DIR, file)
-    );
+
+    const srcPath = path.join(staticDir, entry.name);
+    const destPath = path.join(DIST_DIR, entry.name);
+
+    if (entry.isDirectory()) {
+      copyDir(srcPath, destPath);
+    } else {
+      copyFile(srcPath, destPath);
+    }
   });
 
   // Copy production .htaccess as the actual .htaccess file

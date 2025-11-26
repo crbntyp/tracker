@@ -43,11 +43,22 @@ function formatDateLong(dateStr) {
   });
 }
 
-// Format date short (e.g., "Jan 15")
+// Format date short (e.g., "Jan 15" or "Jan 15 '24" for previous years)
 function formatDateShort(dateStr) {
   // Parse date string as local date to avoid timezone issues
   const [year, month, day] = dateStr.split('-').map(Number);
   const date = new Date(year, month - 1, day);
+  const currentYear = new Date().getFullYear();
+
+  // Show year if it's not the current year
+  if (year !== currentYear) {
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: '2-digit'
+    });
+  }
+
   return date.toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric'
@@ -77,7 +88,7 @@ function calculateWeightStats(entries) {
       value: e.weight.value,
       unit: e.weight.unit
     }))
-    .sort((a, b) => new Date(a.date) - new Date(b.date));
+    .sort((a, b) => a.date.localeCompare(b.date)); // YYYY-MM-DD sorts correctly as string
 
   if (weights.length === 0) {
     return null;

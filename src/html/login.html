@@ -5,6 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#000000">
   <title>trckr__ Login</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="trckr">
+  <link rel="apple-touch-icon" href="icon-192.png">
+
   <link rel="icon" type="image/png" href="favicon.png">
 
   <!-- Geist Mono Font -->
@@ -14,6 +22,22 @@
 
   <link rel="stylesheet" href="css/styles.css">
   <style>
+    @font-face {
+      font-family: "Britanica";
+      src: url("fonts/britanica-bold.woff2") format("woff2"),
+           url("fonts/britanica-bold.woff") format("woff");
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: "Britanica";
+      src: url("fonts/britanica-extra-bold.woff2") format("woff2"),
+           url("fonts/britanica-extra-bold.woff") format("woff");
+      font-weight: 800;
+      font-style: normal;
+      font-display: swap;
+    }
     .login-container {
       display: flex;
       align-items: center;
@@ -103,10 +127,21 @@
       font-weight: 700;
     }
 
-    .app-credit{
+    .app-credit {
       margin-top: 40px;
       display: flex;
       flex-direction: column;
+      align-items: center;
+    }
+
+    .app-credit-logo {
+      font-family: "Britanica", Arial, sans-serif;
+      font-size: 48px;
+      font-weight: 800;
+      color: white;
+      clip-path: inset(0 0 44% 0);
+      line-height: 1;
+      margin-bottom: -20px;
     }
   </style>
 </head>
@@ -140,12 +175,18 @@
     </div>
 
     <div class="app-credit">
-      <img src="crbntyp-logo.png" alt="crbntyp logo" style="height: 40px; margin-bottom: 8px;">
-      crbntyp
+      <span class="app-credit-logo">crbntyp</span>
     </div>
     
 
   </div>
   <script src="js/bg-rotator.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js')
+        .then(() => console.log('PWA: Service Worker registered'))
+        .catch((err) => console.log('PWA: Service Worker failed', err));
+    }
+  </script>
 </body>
 </html>

@@ -1,55 +1,69 @@
-// Service Worker for notifications and caching
+// Service Worker for trckr PWA
+const CACHE_NAME = 'trckr-v1';
+const urlsToCache = [
+  '/trckr/',
+  '/trckr/login.html',
+  '/trckr/calendar.html',
+  '/trckr/charts.html',
+  '/trckr/scan.html',
+  '/trckr/css/styles.css',
+  '/trckr/favicon.png'
+];
 
 self.addEventListener('install', event => {
-  console.log('Service Worker installed');
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => {
+      return cache.addAll(urlsToCache);
+    })
+  );
   self.skipWaiting();
 });
 
 self.addEventListener('activate', event => {
-  console.log('Service Worker activated');
-  return self.clients.claim();
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames
+          .filter(name => name !== CACHE_NAME)
+          .map(name => caches.delete(name))
+      );
+    })
+  );
+  self.clients.claim();
+});
+
+// Network first, fall back to cache
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    fetch(event.request)
+      .then(response => {
+        if (response.status === 200) {
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then(cache => {
+            cache.put(event.request, responseClone);
+          });
+        }
+        return response;
+      })
+      .catch(() => caches.match(event.request))
+  );
 });
 
 // Handle notification clicks
 self.addEventListener('notificationclick', event => {
   event.notification.close();
-
-  const urlToOpen = event.notification.data?.url || '/';
-
+  const urlToOpen = event.notification.data?.url || '/trckr/';
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true })
       .then(windowClients => {
-        // Check if there's already a window open
         for (let client of windowClients) {
           if (client.url === urlToOpen && 'focus' in client) {
             return client.focus();
           }
         }
-        // Open new window if none exists
         if (clients.openWindow) {
           return clients.openWindow(urlToOpen);
         }
-      })
-  );
-});
-
-// Optional: Add offline caching
-const CACHE_NAME = 'weight-tracker-v1';
-const urlsToCache = [
-  '/',
-  '/css/styles.css',
-  '/js/app.js',
-  '/js/data.js',
-  '/js/ui.js'
-];
-
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request)
-      .then(response => response || fetch(event.request))
-      .catch(() => {
-        // Return offline page if available
-        return caches.match('/');
       })
   );
 });
