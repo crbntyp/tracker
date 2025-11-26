@@ -134,6 +134,27 @@ function copyHtml() {
   log('✓ HTML files copied', 'green');
 }
 
+// Copy Line Awesome icons (self-hosted for PWA)
+function copyLineAwesome() {
+  log('📦 Copying Line Awesome...', 'blue');
+
+  const laDir = path.join(__dirname, 'node_modules', 'line-awesome', 'dist', 'line-awesome');
+
+  // Copy CSS
+  copyFile(
+    path.join(laDir, 'css', 'line-awesome.min.css'),
+    path.join(DIST_DIR, 'css', 'line-awesome.min.css')
+  );
+
+  // Copy fonts
+  copyDir(
+    path.join(laDir, 'fonts'),
+    path.join(DIST_DIR, 'fonts')
+  );
+
+  log('✓ Line Awesome copied', 'green');
+}
+
 // Copy static assets
 function copyStatic() {
   log('🖼️  Copying static assets...', 'blue');
@@ -182,6 +203,7 @@ function build() {
     copyJs();
     copyHtml();
     copyStatic();
+    copyLineAwesome();
     compileScss();
 
     log('\n✅ Build completed successfully!\n', 'green');
