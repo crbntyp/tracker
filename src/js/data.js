@@ -52,10 +52,7 @@ let settingsCache = null;
 // Initialize storage (fetch all entries from backend)
 async function initStorage() {
   try {
-    console.log('initStorage - Fetching entries from API...');
     entriesCache = await API.get(buildPath('/api/entries'));
-    console.log('initStorage - Entries fetched:', entriesCache.length, 'entries');
-    console.log('initStorage - Entries data:', entriesCache);
     settingsCache = await API.get(buildPath('/api/settings'));
   } catch (error) {
     console.error('Error initializing storage:', error);
@@ -104,27 +101,19 @@ function getEntry(date) {
 
 // Save/update entry
 async function saveEntry(date, data) {
-  console.log('saveEntry called with date:', date, 'data:', data);
   try {
     const existing = getEntry(date);
     const merged = { ...existing, ...data, date };
-    console.log('Merged data:', merged);
 
-    console.log('Calling API.post...');
     const result = await API.post(buildPath('/api/entries'), merged);
-    console.log('API.post result:', result);
 
-    // Update cache
     if (entriesCache) {
       const index = entriesCache.findIndex(e => e.date === date);
       if (index >= 0) {
-        console.log('Updating existing entry in cache at index', index);
         entriesCache[index] = result;
       } else {
-        console.log('Adding new entry to cache');
         entriesCache.push(result);
       }
-      console.log('Cache now has', entriesCache.length, 'entries');
     } else {
       console.warn('entriesCache is null!');
     }
@@ -132,13 +121,12 @@ async function saveEntry(date, data) {
     return result;
   } catch (error) {
     console.error('Error saving entry:', error);
-    throw error; // Re-throw so the UI can catch it
+    throw error;
   }
 }
 
 // Get all entries
 function getAllEntries() {
-  console.log('getAllEntries called - cache:', entriesCache);
   return entriesCache || [];
 }
 
@@ -174,7 +162,6 @@ function createEmptyEntry(date) {
 
 // Save weight for specific date
 async function saveWeightForDate(date, value, unit, time) {
-  console.log('saveWeightForDate called:', date, value, unit, time);
   const data = {
     weight: {
       value: parseFloat(value),
@@ -183,16 +170,7 @@ async function saveWeightForDate(date, value, unit, time) {
       timestamp: Date.now()
     }
   };
-  console.log('Calling saveEntry with:', date, data);
-  const result = await saveEntry(date, data);
-  console.log('saveWeightForDate result:', result);
-  return result;
-}
-
-// Save weight (legacy - defaults to today)
-async function saveWeight(value, unit, time) {
-  const today = new Date().toISOString().split('T')[0];
-  return saveWeightForDate(today, value, unit, time);
+  return saveEntry(date, data);
 }
 
 // Save lunch for specific date
@@ -209,12 +187,6 @@ async function saveLunchForDate(date, description, calories, time) {
   return await saveEntry(date, data);
 }
 
-// Save lunch (legacy - defaults to today)
-async function saveLunch(description, calories, time) {
-  const today = new Date().toISOString().split('T')[0];
-  return saveLunchForDate(today, description, calories, time);
-}
-
 // Save dinner for specific date
 async function saveDinnerForDate(date, description, calories, time) {
   const data = {
@@ -227,12 +199,6 @@ async function saveDinnerForDate(date, description, calories, time) {
     }
   };
   return await saveEntry(date, data);
-}
-
-// Save dinner (legacy - defaults to today)
-async function saveDinner(description, calories, time) {
-  const today = new Date().toISOString().split('T')[0];
-  return saveDinnerForDate(today, description, calories, time);
 }
 
 // Add drink for specific date
@@ -250,24 +216,12 @@ async function addDrinkForDate(date, type, amount, time) {
   return await saveEntry(date, entry);
 }
 
-// Add drink (legacy - defaults to today)
-async function addDrink(type, amount, time) {
-  const today = new Date().toISOString().split('T')[0];
-  return addDrinkForDate(today, type, amount, time);
-}
-
 // Save diary for specific date
 async function saveDiaryForDate(date, content) {
   const data = {
     diary: content
   };
   return await saveEntry(date, data);
-}
-
-// Save diary (legacy - defaults to today)
-async function saveDiary(content) {
-  const today = new Date().toISOString().split('T')[0];
-  return saveDiaryForDate(today, content);
 }
 
 // Save gym for specific date
@@ -278,12 +232,6 @@ async function saveGymForDate(date, attended) {
   return await saveEntry(date, data);
 }
 
-// Save gym (legacy - defaults to today)
-async function saveGym(attended) {
-  const today = new Date().toISOString().split('T')[0];
-  return saveGymForDate(today, attended);
-}
-
 // Save supplements for specific date
 async function saveSupplementsForDate(date, supplements) {
   const data = {
@@ -292,24 +240,12 @@ async function saveSupplementsForDate(date, supplements) {
   return await saveEntry(date, data);
 }
 
-// Save supplements (legacy - defaults to today)
-async function saveSupplements(supplements) {
-  const today = new Date().toISOString().split('T')[0];
-  return saveSupplementsForDate(today, supplements);
-}
-
 // Save steps for specific date
 async function saveStepsForDate(date, steps) {
   const data = {
     steps: steps
   };
   return await saveEntry(date, data);
-}
-
-// Save steps (legacy - defaults to today)
-async function saveSteps(steps) {
-  const today = new Date().toISOString().split('T')[0];
-  return saveStepsForDate(today, steps);
 }
 
 // Export all data

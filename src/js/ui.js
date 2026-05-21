@@ -116,25 +116,21 @@ function setupWeightForm() {
     const unit = document.getElementById('weightUnit').value;
     const time = document.getElementById('weightTime').value;
 
-    console.log('Weight form submitted:', { date, value, unit, time });
-
     if (date && value && time) {
       try {
-        console.log('Calling saveWeightForDate...');
-        const result = await saveWeightForDate(date, value, unit, time);
-        console.log('Save result:', result);
+        await saveWeightForDate(date, value, unit, time);
 
         closeModal('weightModal');
         updateActionButtons();
 
         // Refresh calendar if on calendar page
-        if (typeof renderWeekView === 'function' && currentWeekStart) {
-          renderWeekView(currentWeekStart);
+        if (typeof renderWeekView === 'function' && typeof calendarState !== 'undefined' && calendarState.currentWeekStart) {
+          renderWeekView(calendarState.currentWeekStart);
         }
 
         // Refresh day details to show updated weight
-        if (typeof showDayDetails === 'function' && selectedDate) {
-          showDayDetails(selectedDate);
+        if (typeof showDayDetails === 'function' && typeof calendarState !== 'undefined' && calendarState.selectedDate) {
+          showDayDetails(calendarState.selectedDate);
         }
 
         showNotification('Weight saved!');

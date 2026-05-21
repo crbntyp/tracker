@@ -1,17 +1,39 @@
 // Charts functionality using Chart.js - Dark Theme
 
-let weightChart = null;
-let changeRateChart = null;
-let weeklyComparisonChart = null;
-let calorieChart = null;
-let stepsChart = null;
-let nutritionChart = null;
-let currentPeriod = 365; // Default to All Time
+const chartState = {
+  charts: {
+    weight: null,
+    changeRate: null,
+    weeklyComparison: null,
+    steps: null,
+    nutrition: null
+  },
+  period: 365 // Default to All Time
+};
 
 // Chart.js defaults for dark theme
 Chart.defaults.color = '#cbd5e1'; // text-secondary
 Chart.defaults.borderColor = 'rgba(100, 116, 139, 0.2)';
 Chart.defaults.font.family = "'Muli', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+
+// Loading skeletons replace canvases with a spinner div, so on re-render we
+// have to find the chart-section by its heading text and put the canvas back.
+function getOrRecreateChartCanvas(canvasId, sectionHeading) {
+  let canvas = document.getElementById(canvasId);
+  if (canvas) return canvas;
+
+  const sections = document.querySelectorAll('.chart-section');
+  for (const section of sections) {
+    if (section.textContent.includes(sectionHeading)) {
+      const container = section.querySelector('.chart-container');
+      if (container) {
+        container.innerHTML = `<canvas id="${canvasId}"></canvas>`;
+        return document.getElementById(canvasId);
+      }
+    }
+  }
+  return null;
+}
 
 // Initialize charts page
 function initCharts() {
@@ -21,12 +43,12 @@ function initCharts() {
     const chartsGrid = document.querySelector('.charts-grid');
     if (chartsGrid) chartsGrid.classList.add('fade-in');
 
-    initWeightChart(currentPeriod);
-    initChangeRateChart(currentPeriod);
-    initWeeklyComparisonChart(currentPeriod);
-    initStepsChart(currentPeriod);
-    initNutritionChart(currentPeriod);
-    displayStatistics(currentPeriod);
+    initWeightChart(chartState.period);
+    initChangeRateChart(chartState.period);
+    initWeeklyComparisonChart(chartState.period);
+    initStepsChart(chartState.period);
+    initNutritionChart(chartState.period);
+    displayStatistics(chartState.period);
     setupPeriodButtons();
     setupTabButtons();
   }, 300);
@@ -105,33 +127,11 @@ function showChartsSkeleton() {
 
 // Initialize weight chart
 function initWeightChart(days) {
-  let canvas = document.getElementById('weightChart');
-
-  // Recreate canvas if it was destroyed by loading skeleton
-  if (!canvas) {
-    // Find the chart container by searching through chart-sections
-    const sections = document.querySelectorAll('.chart-section');
-    for (const section of sections) {
-      if (section.textContent.includes('Weight Trend')) {
-        const container = section.querySelector('.chart-container');
-        if (container) {
-          container.innerHTML = '<canvas id="weightChart"></canvas>';
-          canvas = document.getElementById('weightChart');
-          break;
-        }
-      }
-    }
-  }
-
+  const canvas = getOrRecreateChartCanvas('weightChart', 'Weight Trend');
   if (!canvas) return;
 
   const entries = getLastNDaysEntries(days);
-  console.log('Chart - Total entries:', getAllEntries().length);
-  console.log('Chart - Filtered entries for', days, 'days:', entries.length);
-  console.log('Chart - Entries:', entries);
-
   const weightStats = calculateWeightStats(entries);
-  console.log('Chart - Weight stats:', weightStats);
 
   if (!weightStats || weightStats.weights.length === 0) {
     canvas.parentElement.innerHTML = '<p class="no-data-message">No weight data available yet. Start tracking your weight to see charts!</p>';
@@ -144,13 +144,12 @@ function initWeightChart(days) {
   // Calculate 7-day moving average
   const movingAverage = calculateMovingAverage(data, 7);
 
-  // Destroy existing chart if it exists
-  if (weightChart) {
-    weightChart.destroy();
+  if (chartState.charts.weight) {
+    chartState.charts.weight.destroy();
   }
 
   const ctx = canvas.getContext('2d');
-  weightChart = new Chart(ctx, {
+  chartState.charts.weight = new Chart(ctx, {
     type: 'line',
     data: {
       labels: labels,
@@ -304,32 +303,6 @@ function displayStatistics(days) {
   `;
 }
 
-// Display weight logging statistics
-function displayMealStats(days) {
-  const statsEl = document.getElementById('mealStats');
-  if (!statsEl) return;
-
-  const entries = getLastNDaysEntries(days);
-  const stats = calculateMealStats(entries);
-
-  if (!stats) {
-    statsEl.innerHTML = '<p class="no-data-message">No data available</p>';
-    return;
-  }
-
-  statsEl.innerHTML = `
-    <div class="progress-item">
-      <div class="progress-header">
-        <span class="progress-label">Weight Entries</span>
-        <span class="progress-value">${stats.weightRate}% (${stats.weightCount}/${stats.totalDays})</span>
-      </div>
-      <div class="progress-bar">
-        <div class="progress-fill" style="width: ${stats.weightRate}%"></div>
-      </div>
-    </div>
-  `;
-}
-
 // Setup period selection buttons
 function setupPeriodButtons() {
   const buttons = document.querySelectorAll('.period-btn');
@@ -342,7 +315,7 @@ function setupPeriodButtons() {
 
       // Update charts with new period
       const period = parseInt(this.getAttribute('data-period'));
-      currentPeriod = period;
+      chartState.period = period;
       initWeightChart(period);
       initChangeRateChart(period);
       initWeeklyComparisonChart(period);
@@ -371,23 +344,7 @@ function calculateMovingAverage(data, windowSize) {
 
 // Initialize weight change rate chart
 function initChangeRateChart(days) {
-  let canvas = document.getElementById('changeRateChart');
-
-  // Recreate canvas if it was destroyed by loading skeleton
-  if (!canvas) {
-    const sections = document.querySelectorAll('.chart-section');
-    for (const section of sections) {
-      if (section.textContent.includes('Weight Change Rate')) {
-        const container = section.querySelector('.chart-container');
-        if (container) {
-          container.innerHTML = '<canvas id="changeRateChart"></canvas>';
-          canvas = document.getElementById('changeRateChart');
-          break;
-        }
-      }
-    }
-  }
-
+  const canvas = getOrRecreateChartCanvas('changeRateChart', 'Weight Change Rate');
   if (!canvas) return;
 
   const entries = getLastNDaysEntries(days);
@@ -413,12 +370,12 @@ function initChangeRateChart(days) {
     labels.push(formatDateShort(curr.date));
   }
 
-  if (changeRateChart) {
-    changeRateChart.destroy();
+  if (chartState.charts.changeRate) {
+    chartState.charts.changeRate.destroy();
   }
 
   const ctx = canvas.getContext('2d');
-  changeRateChart = new Chart(ctx, {
+  chartState.charts.changeRate = new Chart(ctx, {
     type: 'bar',
     data: {
       labels: labels,
@@ -465,23 +422,7 @@ function initChangeRateChart(days) {
 
 // Initialize weekly comparison chart
 function initWeeklyComparisonChart(days) {
-  let canvas = document.getElementById('weeklyComparisonChart');
-
-  // Recreate canvas if it was destroyed by loading skeleton
-  if (!canvas) {
-    const sections = document.querySelectorAll('.chart-section');
-    for (const section of sections) {
-      if (section.textContent.includes('Weekly Average')) {
-        const container = section.querySelector('.chart-container');
-        if (container) {
-          container.innerHTML = '<canvas id="weeklyComparisonChart"></canvas>';
-          canvas = document.getElementById('weeklyComparisonChart');
-          break;
-        }
-      }
-    }
-  }
-
+  const canvas = getOrRecreateChartCanvas('weeklyComparisonChart', 'Weekly Average');
   if (!canvas) return;
 
   const entries = getLastNDaysEntries(days);
@@ -513,12 +454,12 @@ function initWeeklyComparisonChart(days) {
     return values.reduce((a, b) => a + b, 0) / values.length;
   });
 
-  if (weeklyComparisonChart) {
-    weeklyComparisonChart.destroy();
+  if (chartState.charts.weeklyComparison) {
+    chartState.charts.weeklyComparison.destroy();
   }
 
   const ctx = canvas.getContext('2d');
-  weeklyComparisonChart = new Chart(ctx, {
+  chartState.charts.weeklyComparison = new Chart(ctx, {
     type: 'bar',
     data: {
       labels: labels.map(l => 'Week of ' + formatDateShort(l)),
@@ -551,23 +492,7 @@ function initWeeklyComparisonChart(days) {
 
 // Initialize steps chart
 function initStepsChart(days) {
-  let canvas = document.getElementById('stepsChart');
-
-  // Recreate canvas if it was destroyed by loading skeleton
-  if (!canvas) {
-    const sections = document.querySelectorAll('.chart-section');
-    for (const section of sections) {
-      if (section.textContent.includes('Steps Trend')) {
-        const container = section.querySelector('.chart-container');
-        if (container) {
-          container.innerHTML = '<canvas id="stepsChart"></canvas>';
-          canvas = document.getElementById('stepsChart');
-          break;
-        }
-      }
-    }
-  }
-
+  const canvas = getOrRecreateChartCanvas('stepsChart', 'Steps Trend');
   if (!canvas) return;
 
   const entries = getLastNDaysEntries(days);
@@ -587,13 +512,12 @@ function initStepsChart(days) {
   // Calculate 7-day moving average
   const movingAverage = calculateMovingAverage(data, 7);
 
-  // Destroy existing chart if it exists
-  if (stepsChart) {
-    stepsChart.destroy();
+  if (chartState.charts.steps) {
+    chartState.charts.steps.destroy();
   }
 
   const ctx = canvas.getContext('2d');
-  stepsChart = new Chart(ctx, {
+  chartState.charts.steps = new Chart(ctx, {
     type: 'line',
     data: {
       labels: labels,
@@ -697,107 +621,9 @@ function initStepsChart(days) {
   });
 }
 
-// Initialize calorie chart
-function initCalorieChart(days) {
-  const canvas = document.getElementById('calorieChart');
-  if (!canvas) return;
-
-  const entries = getLastNDaysEntries(days);
-  const calorieData = entries
-    .filter(e => (e.lunch?.calories || e.dinner?.calories))
-    .map(e => ({
-      date: e.date,
-      lunch: e.lunch?.calories || 0,
-      dinner: e.dinner?.calories || 0,
-      total: (e.lunch?.calories || 0) + (e.dinner?.calories || 0)
-    }))
-    .sort((a, b) => a.date.localeCompare(b.date));
-
-  if (calorieData.length === 0) {
-    canvas.parentElement.innerHTML = '<p class="no-data-message">No calorie data available. Add calorie information to your meals!</p>';
-    return;
-  }
-
-  const labels = calorieData.map(d => formatDateShort(d.date));
-
-  if (calorieChart) {
-    calorieChart.destroy();
-  }
-
-  const ctx = canvas.getContext('2d');
-  calorieChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: labels,
-      datasets: [{
-        label: 'Lunch (cal)',
-        data: calorieData.map(d => d.lunch),
-        backgroundColor: 'rgba(255, 107, 0, 0.6)',
-        borderColor: '#ff6b00',
-        borderWidth: 2,
-        stack: 'Stack 0'
-      }, {
-        label: 'Dinner (cal)',
-        data: calorieData.map(d => d.dinner),
-        backgroundColor: 'rgba(220, 38, 38, 0.6)',
-        borderColor: '#dc2626',
-        borderWidth: 2,
-        stack: 'Stack 0'
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: true },
-        tooltip: {
-          backgroundColor: 'rgba(17, 17, 17, 0.95)',
-          callbacks: {
-            footer: function(items) {
-              const total = items.reduce((sum, item) => sum + item.parsed.y, 0);
-              return `Total: ${total} cal`;
-            }
-          }
-        }
-      },
-      scales: {
-        y: {
-          stacked: true,
-          grid: { color: 'rgba(100, 116, 139, 0.1)' },
-          ticks: {
-            callback: function(value) {
-              return value + ' cal';
-            }
-          }
-        },
-        x: {
-          stacked: true,
-          grid: { display: false }
-        }
-      }
-    }
-  });
-}
-
 // Initialize nutrition chart
 function initNutritionChart(days) {
-  let canvas = document.getElementById('nutritionChart');
-
-  // Recreate canvas if it was destroyed by loading skeleton
-  if (!canvas) {
-    const sections = document.querySelectorAll('.chart-section');
-    for (const section of sections) {
-      if (section.textContent.includes('Nutrition Trends')) {
-        const container = section.querySelector('.chart-container');
-        if (container) {
-          container.innerHTML = '<canvas id="nutritionChart"></canvas>';
-          canvas = document.getElementById('nutritionChart');
-          break;
-        }
-      }
-    }
-  }
-
+  const canvas = getOrRecreateChartCanvas('nutritionChart', 'Nutrition Trends');
   if (!canvas) return;
 
   const entries = getLastNDaysEntries(days);
@@ -848,13 +674,12 @@ function initNutritionChart(days) {
   const carbsData = nutritionData.map(d => Math.round(d.carbs));
   const fatData = nutritionData.map(d => Math.round(d.fat));
 
-  // Destroy existing chart if it exists
-  if (nutritionChart) {
-    nutritionChart.destroy();
+  if (chartState.charts.nutrition) {
+    chartState.charts.nutrition.destroy();
   }
 
   const ctx = canvas.getContext('2d');
-  nutritionChart = new Chart(ctx, {
+  chartState.charts.nutrition = new Chart(ctx, {
     type: 'line',
     data: {
       labels: labels,

@@ -1,16 +1,18 @@
 // Calendar view functionality
 
-let currentWeekStart = getWeekStart(new Date());
-let currentMonthDate = new Date();
-let selectedDate = null;
-let viewMode = 'week'; // 'week' or 'month'
+const calendarState = {
+  currentWeekStart: getWeekStart(new Date()),
+  currentMonthDate: new Date(),
+  selectedDate: null,
+  viewMode: 'week' // 'week' or 'month'
+};
 
 // Initialize calendar
 function initCalendar() {
   // Skeletons are already showing from HTML initialization
   // Small delay to show skeletons, then load real data
   setTimeout(() => {
-    renderWeekView(currentWeekStart);
+    renderWeekView(calendarState.currentWeekStart);
     setupCalendarNavigation();
     updateMonthYearDisplay();
 
@@ -69,7 +71,7 @@ function renderWeekView(weekStart) {
       dayEl.classList.add('today');
     }
 
-    if (selectedDate === dateStr) {
+    if (calendarState.selectedDate === dateStr) {
       dayEl.classList.add('selected');
     }
 
@@ -92,13 +94,13 @@ function renderWeekView(weekStart) {
 
 // Select a day and show details
 function selectDay(dateStr) {
-  selectedDate = dateStr;
+  calendarState.selectedDate = dateStr;
 
   // Re-render the appropriate view based on current mode
-  if (viewMode === 'month') {
-    renderMonthView(currentMonthDate);
+  if (calendarState.viewMode === 'month') {
+    renderMonthView(calendarState.currentMonthDate);
   } else {
-    renderWeekView(currentWeekStart);
+    renderWeekView(calendarState.currentWeekStart);
   }
 
   showDayDetails(dateStr);
@@ -110,7 +112,7 @@ function selectDay(dateStr) {
 // Scroll to selected day in week view (mobile)
 function scrollToSelectedDay() {
   // Only on mobile/tablet and week view
-  if (viewMode !== 'week' || window.innerWidth > 768) return;
+  if (calendarState.viewMode !== 'week' || window.innerWidth > 768) return;
 
   const container = document.getElementById('calendar-week');
   const selectedDay = container?.querySelector('.calendar-day.selected');
@@ -242,7 +244,7 @@ function renderMealItems(meals) {
       items.forEach((item, index) => {
         html += `
           <div class="nutrition-item">
-            <button class="nutrition-item-delete" onclick="deleteMealItem('${selectedDate}', '${mealType}', ${index})" title="Delete">
+            <button class="nutrition-item-delete" onclick="deleteMealItem('${calendarState.selectedDate}', '${mealType}', ${index})" title="Delete">
               <i class="las la-times"></i>
             </button>
             <div class="nutrition-item-header">
@@ -433,80 +435,42 @@ function openModalForDateSteps(date) {
   openModal('stepsModal');
 }
 
-// Navigate to previous week
-function previousWeek() {
-  const newDate = new Date(currentWeekStart);
-  newDate.setDate(newDate.getDate() - 7);
-  currentWeekStart = newDate;
-  renderWeekView(currentWeekStart);
-  updateMonthYearDisplay();
+// Clear day-details selection if it falls outside the visible week
+function clearSelectionOutsideWeek() {
+  if (!calendarState.selectedDate) return;
 
-  // Clear selection if not in current week
-  if (selectedDate) {
-    const weekEnd = new Date(currentWeekStart);
-    weekEnd.setDate(weekEnd.getDate() + 6);
-    const selDate = new Date(selectedDate);
-    if (selDate < currentWeekStart || selDate > weekEnd) {
-      selectedDate = null;
-      const detailsEl = document.getElementById('day-details');
-      if (detailsEl) {
-        detailsEl.innerHTML = '<p class="select-day-prompt">Select a day to view details</p>';
-      }
+  const weekEnd = new Date(calendarState.currentWeekStart);
+  weekEnd.setDate(weekEnd.getDate() + 6);
+  const selDate = new Date(calendarState.selectedDate);
+
+  if (selDate < calendarState.currentWeekStart || selDate > weekEnd) {
+    calendarState.selectedDate = null;
+    const detailsEl = document.getElementById('day-details');
+    if (detailsEl) {
+      detailsEl.innerHTML = '<p class="select-day-prompt">Select a day to view details</p>';
     }
   }
 }
 
-// Navigate to next week
-function nextWeek() {
-  const newDate = new Date(currentWeekStart);
-  newDate.setDate(newDate.getDate() + 7);
-  currentWeekStart = newDate;
-  renderWeekView(currentWeekStart);
+// Navigate by a number of weeks (positive = forward, negative = back)
+function shiftWeek(delta) {
+  const newDate = new Date(calendarState.currentWeekStart);
+  newDate.setDate(newDate.getDate() + delta * 7);
+  calendarState.currentWeekStart = newDate;
+  renderWeekView(calendarState.currentWeekStart);
   updateMonthYearDisplay();
-
-  // Clear selection if not in current week
-  if (selectedDate) {
-    const weekEnd = new Date(currentWeekStart);
-    weekEnd.setDate(weekEnd.getDate() + 6);
-    const selDate = new Date(selectedDate);
-    if (selDate < currentWeekStart || selDate > weekEnd) {
-      selectedDate = null;
-      const detailsEl = document.getElementById('day-details');
-      if (detailsEl) {
-        detailsEl.innerHTML = '<p class="select-day-prompt">Select a day to view details</p>';
-      }
-    }
-  }
+  clearSelectionOutsideWeek();
 }
+
+function previousWeek() { shiftWeek(-1); }
+function nextWeek() { shiftWeek(1); }
 
 // Go to current week
 function goToToday() {
-  currentWeekStart = getWeekStart(new Date());
+  calendarState.currentWeekStart = getWeekStart(new Date());
   const today = getDateString(new Date());
   selectDay(today);
   updateMonthYearDisplay();
-}
-
-// Update month/year display
-function updateMonthYearDisplay() {
-  const displayEl = document.getElementById('month-year-display');
-  if (!displayEl) return;
-
-  const weekEnd = new Date(currentWeekStart);
-  weekEnd.setDate(weekEnd.getDate() + 6);
-
-  const startMonth = currentWeekStart.toLocaleDateString('en-US', { month: 'long' });
-  const endMonth = weekEnd.toLocaleDateString('en-US', { month: 'long' });
-  const year = currentWeekStart.getFullYear();
-
-  let displayText;
-  if (startMonth === endMonth) {
-    displayText = `${startMonth} ${year}`;
-  } else {
-    displayText = `${startMonth} - ${endMonth} ${year}`;
-  }
-
-  displayEl.textContent = displayText;
 }
 
 // Setup navigation buttons
@@ -518,7 +482,7 @@ function setupCalendarNavigation() {
 
   if (prevBtn) {
     prevBtn.addEventListener('click', function() {
-      if (viewMode === 'week') {
+      if (calendarState.viewMode === 'week') {
         previousWeek();
       } else {
         previousMonth();
@@ -528,7 +492,7 @@ function setupCalendarNavigation() {
 
   if (nextBtn) {
     nextBtn.addEventListener('click', function() {
-      if (viewMode === 'week') {
+      if (calendarState.viewMode === 'week') {
         nextWeek();
       } else {
         nextMonth();
@@ -551,18 +515,18 @@ function toggleView() {
   const monthView = document.getElementById('calendar-month');
   const toggleBtn = document.getElementById('viewToggleBtn');
 
-  if (viewMode === 'week') {
-    viewMode = 'month';
+  if (calendarState.viewMode === 'week') {
+    calendarState.viewMode = 'month';
     weekView.style.display = 'none';
     monthView.style.display = 'grid';
     toggleBtn.textContent = 'Switch to Week View';
-    renderMonthView(currentMonthDate);
+    renderMonthView(calendarState.currentMonthDate);
   } else {
-    viewMode = 'week';
+    calendarState.viewMode = 'week';
     weekView.style.display = 'grid';
     monthView.style.display = 'none';
     toggleBtn.textContent = 'Switch to Month View';
-    renderWeekView(currentWeekStart);
+    renderWeekView(calendarState.currentWeekStart);
   }
   updateMonthYearDisplay();
 }
@@ -618,7 +582,7 @@ function renderMonthView(monthDate) {
       dayEl.classList.add('today');
     }
 
-    if (selectedDate === dateStr) {
+    if (calendarState.selectedDate === dateStr) {
       dayEl.classList.add('selected');
     }
 
@@ -639,15 +603,15 @@ function renderMonthView(monthDate) {
 
 // Navigate to previous month
 function previousMonth() {
-  currentMonthDate.setMonth(currentMonthDate.getMonth() - 1);
-  renderMonthView(currentMonthDate);
+  calendarState.currentMonthDate.setMonth(calendarState.currentMonthDate.getMonth() - 1);
+  renderMonthView(calendarState.currentMonthDate);
   updateMonthYearDisplay();
 }
 
 // Navigate to next month
 function nextMonth() {
-  currentMonthDate.setMonth(currentMonthDate.getMonth() + 1);
-  renderMonthView(currentMonthDate);
+  calendarState.currentMonthDate.setMonth(calendarState.currentMonthDate.getMonth() + 1);
+  renderMonthView(calendarState.currentMonthDate);
   updateMonthYearDisplay();
 }
 
@@ -656,17 +620,17 @@ function updateMonthYearDisplay() {
   const displayEl = document.getElementById('month-year-display');
   if (!displayEl) return;
 
-  if (viewMode === 'month') {
-    const monthName = currentMonthDate.toLocaleDateString('en-US', { month: 'long' });
-    const year = currentMonthDate.getFullYear();
+  if (calendarState.viewMode === 'month') {
+    const monthName = calendarState.currentMonthDate.toLocaleDateString('en-US', { month: 'long' });
+    const year = calendarState.currentMonthDate.getFullYear();
     displayEl.textContent = `${monthName} ${year}`;
   } else {
-    const weekEnd = new Date(currentWeekStart);
+    const weekEnd = new Date(calendarState.currentWeekStart);
     weekEnd.setDate(weekEnd.getDate() + 6);
 
-    const startMonth = currentWeekStart.toLocaleDateString('en-US', { month: 'long' });
+    const startMonth = calendarState.currentWeekStart.toLocaleDateString('en-US', { month: 'long' });
     const endMonth = weekEnd.toLocaleDateString('en-US', { month: 'long' });
-    const year = currentWeekStart.getFullYear();
+    const year = calendarState.currentWeekStart.getFullYear();
 
     let displayText;
     if (startMonth === endMonth) {
