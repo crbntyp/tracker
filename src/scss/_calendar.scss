@@ -93,12 +93,18 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 24px;
-      color: white;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      font-weight: $font-weight-semibold;
+      gap: 6px;
       min-height: 20px;
+
+      .indicator-icon {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.15);
+        transition: color $transition-base;
+
+        &.logged {
+          color: $accent-warning;
+        }
+      }
     }
 
     &.today {
@@ -608,14 +614,26 @@
     }
   }
 
-  .month-day-indicator {
-    font-size: 24px;
-    color: white;
+  .indicators {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
     position: relative;
     z-index: 1;
 
-    @media (max-width: $mobile) {
-      font-size: 20px;
+    .indicator-icon {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.15);
+      transition: color $transition-base;
+
+      &.logged {
+        color: $accent-warning;
+      }
+
+      @media (max-width: $mobile) {
+        font-size: 10px;
+      }
     }
   }
 
@@ -690,7 +708,7 @@
     }
 
     .month-day-number,
-    .month-day-indicator {
+    .indicators {
       position: relative;
       z-index: 2;
     }

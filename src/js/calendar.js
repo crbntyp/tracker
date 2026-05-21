@@ -22,6 +22,23 @@ function initCalendar() {
   }, 300);
 }
 
+// Render the row of "what was logged" icons shown on each calendar day.
+// Bright = logged, dim = not logged. Used by both week and month views.
+function renderDayIndicators(entry) {
+  const hasMeals = entry.meals && Object.values(entry.meals).some(items => Array.isArray(items) && items.length > 0);
+  const fields = [
+    { logged: !!entry.weight,      icon: 'la-weight',   label: 'Weight' },
+    { logged: !!entry.gym,         icon: 'la-dumbbell', label: 'Gym or walk' },
+    { logged: !!entry.steps,       icon: 'la-walking',  label: 'Steps' },
+    { logged: !!entry.supplements, icon: 'la-pills',    label: 'Supplements' },
+    { logged: hasMeals,            icon: 'la-utensils', label: 'Nutrition' }
+  ];
+  return fields.map(f => {
+    const title = f.logged ? f.label : `${f.label} — not logged`;
+    return `<i class="las ${f.icon} indicator-icon${f.logged ? ' logged' : ''}" title="${title}"></i>`;
+  }).join('');
+}
+
 // Show week skeleton
 function showWeekSkeleton() {
   const container = document.getElementById('calendar-week');
@@ -78,13 +95,10 @@ function renderWeekView(weekStart) {
     const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
     const dayNum = date.getDate();
 
-    // Show weight indicator
-    const indicatorText = entry.weight ? '<i class="las la-check-circle"></i>' : '';
-
     dayEl.innerHTML = `
       <div class="day-name">${dayName}</div>
       <div class="day-num">${dayNum}</div>
-      <div class="indicators">${indicatorText}</div>
+      <div class="indicators">${renderDayIndicators(entry)}</div>
     `;
 
     dayEl.addEventListener('click', () => selectDay(dateStr));
@@ -586,12 +600,9 @@ function renderMonthView(monthDate) {
       dayEl.classList.add('selected');
     }
 
-    // Show weight indicator
-    const hasWeight = entry.weight ? true : false;
-
     dayEl.innerHTML = `
       <div class="month-day-number">${dayNum}</div>
-      ${hasWeight ? `<div class="month-day-indicator"><i class="las la-check-circle"></i></div>` : ''}
+      <div class="indicators">${renderDayIndicators(entry)}</div>
     `;
 
     dayEl.addEventListener('click', () => selectDay(dateStr));
