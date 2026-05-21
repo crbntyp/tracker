@@ -49,20 +49,22 @@
         <button id="viewToggleBtn" class="btn-today">Switch to Month View</button>
       </div>
 
-      <!-- Week View -->
-      <div id="calendar-week" class="calendar-week">
-        <!-- Days will be rendered here by calendar.js -->
-      </div>
+      <!-- Week mode (default): sidebar list of 7 days on the left,
+           day-details on the right. Month mode: drops .week-mode class and
+           falls back to a single column with the month grid on top. -->
+      <div id="calendar-layout" class="calendar-layout week-mode">
+        <div id="calendar-week" class="calendar-week">
+          <!-- Days will be rendered here by calendar.js -->
+        </div>
 
-      <!-- Month View -->
-      <div id="calendar-month" class="calendar-month" style="display: none;">
-        <!-- Month will be rendered here by calendar.js -->
-      </div>
+        <div id="calendar-month" class="calendar-month" style="display: none;">
+          <!-- Month will be rendered here by calendar.js -->
+        </div>
 
-      <!-- Day Details -->
-      <div class="day-details-container">
-        <div id="day-details" class="day-details">
-          <!-- Will be populated by JavaScript -->
+        <div class="day-details-container">
+          <div id="day-details" class="day-details">
+            <!-- Will be populated by JavaScript -->
+          </div>
         </div>
       </div>
     </div>
@@ -211,5 +213,6 @@
       navigator.serviceWorker.register('sw.js').catch(() => {});
     }
   </script>
+  <script src="/stts/tracker/stts.min.js" data-site="trckr" async defer></script>
 </body>
 </html>
