@@ -1,14 +1,7 @@
 // Calendar view functionality
 
-// 7-day window with today centered: 3 days back, today, 3 days forward.
-function getCenteredStart(date) {
-  const d = new Date(date);
-  d.setDate(d.getDate() - 3);
-  return d;
-}
-
 const calendarState = {
-  currentWeekStart: getCenteredStart(new Date()),
+  currentWeekStart: getWeekStart(new Date()),
   currentMonthDate: new Date(),
   selectedDate: null,
   viewMode: 'week' // 'week' or 'month'
@@ -486,9 +479,9 @@ function shiftWeek(delta) {
 function previousWeek() { shiftWeek(-1); }
 function nextWeek() { shiftWeek(1); }
 
-// Go to today (re-center the 7-day window)
+// Go to current week
 function goToToday() {
-  calendarState.currentWeekStart = getCenteredStart(new Date());
+  calendarState.currentWeekStart = getWeekStart(new Date());
   const today = getDateString(new Date());
   selectDay(today);
   updateMonthYearDisplay();
@@ -532,22 +525,19 @@ function setupCalendarNavigation() {
 
 // Toggle between week and month view
 function toggleView() {
-  const layout = document.getElementById('calendar-layout');
   const weekView = document.getElementById('calendar-week');
   const monthView = document.getElementById('calendar-month');
   const toggleBtn = document.getElementById('viewToggleBtn');
 
   if (calendarState.viewMode === 'week') {
     calendarState.viewMode = 'month';
-    if (layout) layout.classList.remove('week-mode');
     weekView.style.display = 'none';
     monthView.style.display = 'grid';
     toggleBtn.textContent = 'Switch to Week View';
     renderMonthView(calendarState.currentMonthDate);
   } else {
     calendarState.viewMode = 'week';
-    if (layout) layout.classList.add('week-mode');
-    weekView.style.display = '';
+    weekView.style.display = 'grid';
     monthView.style.display = 'none';
     toggleBtn.textContent = 'Switch to Month View';
     renderWeekView(calendarState.currentWeekStart);
