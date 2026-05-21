@@ -1,18 +1,19 @@
 // Main SCSS file - imports all partials
 
 // Britanica font for crbntyp branding
+// Compiled CSS lives in /css/, fonts live in /fonts/ — paths are relative to the CSS file.
 @font-face {
   font-family: "Britanica";
-  src: url("fonts/britanica-bold.woff2") format("woff2"),
-       url("fonts/britanica-bold.woff") format("woff");
+  src: url("../fonts/britanica-bold.woff2") format("woff2"),
+       url("../fonts/britanica-bold.woff") format("woff");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "Britanica";
-  src: url("fonts/britanica-extra-bold.woff2") format("woff2"),
-       url("fonts/britanica-extra-bold.woff") format("woff");
+  src: url("../fonts/britanica-extra-bold.woff2") format("woff2"),
+       url("../fonts/britanica-extra-bold.woff") format("woff");
   font-weight: 800;
   font-style: normal;
   font-display: swap;
